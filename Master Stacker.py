@@ -98,6 +98,7 @@ controlOptions=[{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOW
 smallMode=False
 pygame.init()
 pygame.mouse.set_visible(False)
+pygame.display.set_icon(pygame.image.load("Assets\\Icon.png"))
 updateAssets()
 pygame.display.set_caption("Master Stacker")
 mode=0
