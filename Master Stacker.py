@@ -161,6 +161,8 @@ try:
             rotLPressed=[keyboardInputs[x]for x in[pygame.K_q,pygame.K_u,pygame.K_INSERT,pygame.K_KP7,pygame.K_f,pygame.K_KP1]]
             rotRPressed=[keyboardInputs[x]for x in[pygame.K_e,pygame.K_o,pygame.K_PAGEUP,pygame.K_KP9,pygame.K_h,pygame.K_KP2]]
             holdPressed=[keyboardInputs[x]for x in[pygame.K_r,pygame.K_p,pygame.K_BREAK,pygame.K_KP_PLUS,pygame.K_y,pygame.K_KP0]]
+            if vsPlayerCount>=3 and keyboardInputs[pygame.K_PAUSE]:
+                holdPressed[2]=True
             pausePressed=keyboardInputs[pygame.K_SPACE]
         else:
             leftPressed=keyboardInputs[controlOptions[controlSetting]["left"]]
