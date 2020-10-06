@@ -61,7 +61,7 @@ except OSError:
     pass
 else:
     with open("user.ini","w")as x:
-        x.write("0\n20\n1\n12\n2\n0\n0\n0\n2\n1\n0")
+        x.write("0\n20\n1\n12\n2\n0\n0\n0\n1\n1\n0")
 try:
     with open("boards","x")as x:
         pass
