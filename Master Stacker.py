@@ -177,7 +177,7 @@ try:
             pausePressed=keyboardInputs[controlOptions[controlSetting]["pause"]]
         if mode in{1,2,3,4,6}:
             if time==-1:
-                currentBackground=asset("Backgrounds\\Polymino Game"if mode==6 else"Backgrounds\\Standarg Game")
+                currentBackground=asset("Backgrounds\\Polymino Game"if mode==6 else"Backgrounds\\Standard Game")
                 gameBoard=[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
                 if mode==6 and newBags:
                     smallBag={1,2,3,4}
@@ -354,7 +354,7 @@ try:
                     fallTime-=1
                     if downPressed:
                         fallTime=min(fallTime,2)
-                    if fallTime<=0:
+                    while fallTime<=0:
                         fallTime+=1.5**(-level/2+10)
                         pieceY+=1
                         if pieceY>pieceLowestY:
@@ -362,6 +362,12 @@ try:
                             lockTime=60
                         if downPressed or level>16:
                             score+=1
+                        if testPieceCollision():
+                            fallTime-=1.5**(-level/2+10)
+                            pieceY-=1
+                            if downPressed or level>16:
+                                score-=1
+                            break
                 if len(nextPieces)<5:
                     if mode==6 and newBags:
                         temp=[]
@@ -424,7 +430,7 @@ try:
                     pauseMem=True
             else:
                 pauseMem=False
-            drawText(("MAX"if level==20 else" {:02}".format(level)),(80,80))
+            drawText(" {:02}".format(level),(80,80))
             drawText(("  "+str(lines)if lines<100 else(" "+str(lines)if lines<10000 else(str(lines)if lines<100000 else("#"+str(lines%10000)if lines<110000 else("##"+str(lines%1000)if lines<111000 else("###"+str(lines%100)if lines<111100 else("####"+str(lines%10)if lines<111110 else"#####"))))))),(72,56),{'#':0})
             drawText(("{:07}".format(score)if score<10000000 else("#{:06}".format(score%1000000)if score<11000000 else("##{:05}".format(score%100000)if score<11100000 else("###{:04}".format(score%10000)if score<11110000 else("####{:03}".format(score%1000)if score<11111000 else("#####{:02}".format(score%100)if score<11111100 else("######{}".format(score%10)if score<11111110 else"#######"))))))),(57,104),{'#':0})
             drawText(name,(64,152))
@@ -929,7 +935,7 @@ try:
                 if not rightMem:
                     if menuPage==0 and minLvl<maxLvl:
                         minLvl+=1
-                    elif menuPage==1 and maxLvl<20:
+                    elif menuPage==1 and maxLvl<35:
                         maxLvl+=1
                     elif menuPage==2 and ghost:
                         ghost=False
@@ -984,8 +990,8 @@ try:
                     pauseMem=True
             else:
                 pauseMem=False
-            drawText("(1P) Minimum Level:"+("<"if menuPage==0 and minLvl>0 else" ")+("MAX"if minLvl==20 else"{:02}".format(minLvl))+(">"if menuPage==0 and minLvl<maxLvl else""),(0,0),{"<":1,">":2})
-            drawText("(1P) Maximum Level:"+("<"if menuPage==1 and maxLvl>minLvl else" ")+("MAX"if maxLvl==20 else"{:02}".format(maxLvl))+(">"if menuPage==1 and maxLvl<20 else""),(0,8),{"<":1,">":2})
+            drawText("(1P) Starting Level:"+("<"if menuPage==0 and minLvl>0 else" ")+"{:02}".format(minLvl)+(">"if menuPage==0 and minLvl<maxLvl else""),(0,0),{"<":1,">":2})
+            drawText("(1P) Maximum Level:"+("<"if menuPage==1 and maxLvl>minLvl else" ")+"{:02}".format(maxLvl)+(">"if menuPage==1 and maxLvl<35 else""),(0,8),{"<":1,">":2})
             drawText("Ghost:"+("<"if menuPage==2 and not ghost else" ")+("On"if ghost else"Off")+(">"if menuPage==2 and ghost else""),(0,16),{"<":1,">":2})
             drawText("Initial DAS Delay:"+("<"if menuPage==3 and dasInit>1 else" ")+str(dasInit)+(">"if menuPage==3 else""),(0,24),{"<":1,">":2})
             drawText("DAS Speed:"+("<"if menuPage==4 and dasSpeed>1 else" ")+str(dasSpeed)+(">"if menuPage==4 else""),(0,32),{"<":1,">":2})
