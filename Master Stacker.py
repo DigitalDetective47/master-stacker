@@ -1,7 +1,9 @@
+import math
 import os
 import pygame
 import random
 import sys
+root35=math.sqrt(35)
 def blits(blit_sequence):
     global win
     for i in blit_sequence:
@@ -335,9 +337,9 @@ try:
                             combo=0
                         else:
                             combo+=1
-                            score+=int(lineClearValues[0][linesCleared]*(0.95+0.05*combo))*(level+1)
+                            score+=int(lineClearValues[0][linesCleared]*(0.95+0.05*combo)*(29*(math.sin(math.pi*math.sqrt(x)/root35)/math.pi-math.sqrt(x)*math.cos(math.pi*math.sqrt(x)/root35)/root35)+1))
                             if gameBoard==[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]:
-                                score+=45000*(0.95+0.05*combo)*(level+1)
+                                score+=int(45000*(0.95+0.05*combo)*(29*(math.sin(math.pi*math.sqrt(x)/root35)/math.pi-math.sqrt(x)*math.cos(math.pi*math.sqrt(x)/root35)/root35)+1))
                             if maxLvl>lines//10>level:
                                 level+=1
                         pieceID=nextPieces[0]
