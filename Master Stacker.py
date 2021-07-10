@@ -51,8 +51,8 @@ def updateSettings():
     global playerBoardMasks
     user.seek(0)
     user.truncate()
-    user.write(str(minLvl)+"\n"+str(maxLvl)+"\n"+str(int(ghost))+"\n"+str(dasInit)+"\n"+str(dasSpeed)+"\n"+str(controlSetting)+"\n"+str(((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160)).index(resolution))+"\n"+str(int(fullscreen))+"\n"+str(int(garbageType))+"\n"+str(int(garbageBlocking))+"\n"+str(int(samePieces)))
-    settingsSTR=str(minLvl)+"\n"+str(maxLvl)+"\n"+str(dasInit)+"\n"+str(dasSpeed)
+    user.write(str(minLvl)+"\n"+str(maxLvl)+"\n"+str(int(ghost))+"\n"+str(dasInit)+"\n"+str(dasSpeed)+"\n"+str(controlSetting)+"\n"+str(((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160)).index(resolution))+"\n"+str(int(fullscreen))+"\n"+str(int(garbageType))+"\n"+str(int(garbageBlocking))+"\n"+str(int(samePieces))+"\n"+str(int(newBags)))
+    settingsSTR=str(minLvl)+"\n"+str(maxLvl)+"\n"+str(dasInit)+"\n"+str(dasSpeed)+"\n"+str(int(newBags))
     playerBoardMasks=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(16*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
 try:
     with open("user.ini","x")as x:
@@ -61,7 +61,7 @@ except OSError:
     pass
 else:
     with open("user.ini","w")as x:
-        x.write("0\n20\n1\n12\n2\n0\n0\n0\n1\n1\n0")
+        x.write("0\n20\n1\n12\n2\n0\n0\n0\n1\n1\n0\n1")
 try:
     with open("boards","x")as x:
         pass
@@ -76,13 +76,14 @@ maxLvl=int(x[1])
 ghost=bool(int(x[2]))
 dasInit=int(x[3])
 dasSpeed=int(x[4])
-settingsSTR=x[0]+"\n"+x[1]+"\n"+x[3]+"\n"+x[4]
+settingsSTR=x[0]+"\n"+x[1]+"\n"+x[3]+"\n"+x[4]+"\n"+x[11]
 controlSetting=int(x[5])
 resolution=((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160))[int(x[6])]
 fullscreen=bool(int(x[7]))
 garbageType=int(x[8])
 garbageBlocking=bool(int(x[9]))
 samePieces=bool(int(x[10]))
+newBags=bool(int(x[11]))
 del x
 boards=open("boards")
 lines=boards.readlines()
@@ -176,12 +177,20 @@ try:
             pausePressed=keyboardInputs[controlOptions[controlSetting]["pause"]]
         if mode in{1,2,3,4,6}:
             if time==-1:
-                if mode==6:
-                    currentBackground=asset("Backgrounds\\Polymino Game")
-                else:
-                    currentBackground=asset("Backgrounds\\Standard Game")
+                currentBackground=asset("Backgrounds\\Polymino Game"if mode==6 else"Backgrounds\\Standarg Game")
                 gameBoard=[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
-                nextPieces=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==6 else[5,6,7,8,9,10,11]
+                if mode==6 and newBags:
+                    smallBag={1,2,3,4}
+                    mediumBag={5,6,7,8,9,10,11}
+                    bigBag={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                    nextPieces=[]
+                    for i in range(4):
+                        if i<2:
+                            nextPieces.append(smallBag.pop())
+                        nextPieces.append(mediumBag.pop())
+                        nextPieces.append(bigBag.pop())
+                else:
+                    nextPieces=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==6 else[5,6,7,8,9,10,11]
                 random.shuffle(nextPieces)
                 pieceID=nextPieces[0]
                 del nextPieces[0]
@@ -354,7 +363,34 @@ try:
                         if downPressed or level>16:
                             score+=1
                 if len(nextPieces)<5:
-                    temp=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==6 else[5,6,7,8,9,10,11]
+                    if mode==6 and newBags:
+                        temp=[]
+                        for i in range(4):
+                            if i<2:
+                                if len(smallBag)==0:
+                                    smallBag={1,2,3,4}
+                                temp.append(smallBag.pop())
+                            if len(mediumBag)==0:
+                                mediumBag={5,6,7,8,9,10,11}
+                            while True:
+                                temp2=mediumBag.pop()
+                                if temp2 in temp:
+                                    mediumBag.add(temp2)
+                                else:
+                                    temp.append(temp2)
+                                    break
+                            if len(bigBag)==0:
+                                bigBag={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                            while True:
+                                temp2=bigBag.pop()
+                                if temp2 in temp:
+                                    bigBag.add(temp2)
+                                else:
+                                    temp.append(temp2)
+                                    break
+                        del temp2
+                    else:
+                        temp=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==6 else[5,6,7,8,9,10,11]
                     random.shuffle(temp)
                     nextPieces+=temp
                     del temp
@@ -397,14 +433,14 @@ try:
                 toppedOut=True
                 gameWin=True
             if toppedOut:
-                boards.write(str(mode)+"\n"+str(score)+"\n"+name+"\n"+settingsSTR+"\n0\n")
-                leaderboards.append([mode,score,name,settingsSTR.split("\n"),0])
+                boards.write(str(mode)+"\n"+str(score)+"\n"+name+"\n"+(settingsSTR if mode==6 else settingsSTR.rsplit("\n",1)[0])+"\n0\n")
+                leaderboards.append([mode,score,name,settingsSTR.split("\n")[:(5 if mode==6 else 4)],0])
                 if mode in{3,4,6}:
-                    boards.write(str(mode)+"\n"+str(lines)+"\n"+name+"\n"+settingsSTR+"\n2\n")
-                    leaderboards.append([mode,lines,name,settingsSTR.split("\n"),2])
+                    boards.write(str(mode)+"\n"+str(lines)+"\n"+name+"\n"+(settingsSTR if mode==6 else settingsSTR.rsplit("\n",1)[0])+"\n2\n")
+                    leaderboards.append([mode,lines,name,settingsSTR.split("\n")[:(5 if mode==6 else 4)],2])
                 elif gameWin:
-                    boards.write(str(mode)+"\n"+str(time)+"\n"+name+"\n"+settingsSTR+"\n1\n")
-                    leaderboards.append([mode,score,time,settingsSTR.split("\n"),1])
+                    boards.write(str(mode)+"\n"+str(time)+"\n"+name+"\n"+settingsSTR.rsplit("\n",1)[0]+"\n1\n")
+                    leaderboards.append([mode,score,time,settingsSTR.split("\n")[:4],1])
                 currentBackground=asset("Backgrounds\\Menu\\"+str(mode))
                 mode=0
                 updateBackground()
@@ -416,10 +452,32 @@ try:
                 nextPieces=[[]for i in range(vsPlayerCount)]
                 pieceID=[0,]*vsPlayerCount
                 if samePieces:
-                    x=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==7 else[5,6,7,8,9,10,11]
+                    if mode==7 and newBags:
+                        smallBag={1,2,3,4}
+                        mediumBag={5,6,7,8,9,10,11}
+                        bigBag={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                        x=[]
+                        for i in range(4):
+                            if i<2:
+                                x.append(smallBag.pop())
+                            x.append(mediumBag.pop())
+                            x.append(bigBag.pop())
+                    else:
+                        x=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==7 else[5,6,7,8,9,10,11]
                     random.shuffle(x)
                 for i in range(vsPlayerCount):
-                    nextPieces[i]=list(x)if samePieces else random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==7 else[5,6,7,8,9,10,11]
+                    if mode==7 and not samePieces and newBags:
+                        smallBag[i]={1,2,3,4}
+                        mediumBag[i]={5,6,7,8,9,10,11}
+                        bigBag[i]={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                        nextPieces[i]=[]
+                        for i in range(4):
+                            if i<2:
+                                nextPieces[i].append(smallBag[i].pop())
+                            nextPieces[i].append(mediumBag[i].pop())
+                            nextPieces[i].append(bigBag[i].pop())
+                    else:
+                        nextPieces[i]=list(x)if samePieces else random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==7 else[5,6,7,8,9,10,11]
                     if not samePieces:
                         random.shuffle(nextPieces[i])
                     pieceID[i]=nextPieces[i][0]
@@ -606,7 +664,60 @@ try:
                                     pieceLowestY[currentPlayerHandle]=pieceY[currentPlayerHandle]
                                     lockTime[currentPlayerHandle]=60
                         if len(nextPieces[currentPlayerHandle])<5:
-                            temp=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==7 else[5,6,7,8,9,10,11]
+                            if mode==6 and newBags:
+                                if samePieces:
+                                    temp=[]
+                                    for i in range(4):
+                                        if i<2:
+                                            if len(smallBag)==0:
+                                                smallBag={1,2,3,4}
+                                            temp.append(smallBag.pop())
+                                        if len(mediumBag)==0:
+                                            mediumBag={5,6,7,8,9,10,11}
+                                        while True:
+                                            temp2=mediumBag.pop()
+                                            if temp2 in temp:
+                                                mediumBag.add(temp2)
+                                            else:
+                                                temp.append(temp2)
+                                                break
+                                        if len(bigBag)==0:
+                                            bigBag={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                                        while True:
+                                            temp2=bigBag.pop()
+                                            if temp2 in temp:
+                                                bigBag.add(temp2)
+                                            else:
+                                                temp.append(temp2)
+                                                break
+                                    del temp2
+                                else:
+                                    temp=[]
+                                    for i in range(4):
+                                        if i<2:
+                                            if len(smallBag[currentPlayerHandle])==0:
+                                                smallBag[currentPlayerHandle]={1,2,3,4}
+                                            temp.append(smallBag[currentPlayerHandle].pop())
+                                        if len(mediumBag[currentPlayerHandle])==0:
+                                            mediumBag[currentPlayerHandle]={5,6,7,8,9,10,11}
+                                        while True:
+                                            temp2=mediumBag[currentPlayerHandle].pop()
+                                            if temp2 in temp:
+                                                mediumBag[currentPlayerHandle].add(temp2)
+                                            else:
+                                                temp.append(temp2)
+                                                break
+                                        if len(bigBag[currentPlayerHandle])==0:
+                                            bigBag[currentPlayerHandle]={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                                        while True:
+                                            temp2=bigBag[currentPlayerHandle].pop()
+                                            if temp2 in temp:
+                                                bigBag[currentPlayerHandle].add(temp2)
+                                            else:
+                                                temp.append(temp2)
+                                                break
+                            else:
+                                temp=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==6 else[5,6,7,8,9,10,11]
                             random.shuffle(temp)
                             if samePieces:
                                 for i in[x for x in range(vsPlayerCount)if not toppedOut[x]]:
@@ -809,6 +920,8 @@ try:
                         garbageBlocking=True
                     elif menuPage==9 and not samePieces:
                         samePieces=True
+                    elif menuPage==10 and not newBags:
+                        newBags=True
                     leftMem=True
             else:
                 leftMem=False
@@ -837,6 +950,8 @@ try:
                         garbageBlocking=False
                     elif menuPage==9 and samePieces:
                         samePieces=False
+                    elif menuPage==10 and newBags:
+                        newBags=False
                     rightMem=True
             else:
                 rightMem=False
@@ -844,7 +959,7 @@ try:
                 if not downMem:
                     if menuPage==7 and garbageType==2:
                         menuPage=9
-                    elif menuPage<10:
+                    elif menuPage<11:
                         menuPage+=1
                     downMem=True
             else:
@@ -860,7 +975,7 @@ try:
                 upMem=False
             if pausePressed:
                 if not pauseMem:
-                    if menuPage==10:
+                    if menuPage==11:
                         updateSettings()
                         menuPage=-1
                         mode=0
@@ -880,7 +995,8 @@ try:
             if garbageType!=2:
                 drawText("(VS) Garbage Countering:"+("<"if menuPage==8 and not garbageBlocking else" ")+("On"if garbageBlocking else"Off")+(">"if menuPage==8 and garbageBlocking else""),(0,64),{"<":1,">":2})
             drawText("(VS) All Players Get Same Pieces:"+("<"if menuPage==9 and not samePieces else" ")+("On"if samePieces else"Off")+(">"if menuPage==9 and samePieces else""),(0,72),{"<":1,">":2})
-            drawText("Back"+("<"if menuPage==10 else""),(0,80),{"<":1})
+            drawText("(Polymino) New Bag System:"+("<"if menuPage==10 and not newBags else" ")+("On"if newBags else"Off")+(">"if menuPage==10 and newBags else""),(0,80),{"<":1,">":2})
+            drawText("Back"+("<"if menuPage==11 else""),(0,88),{"<":1})
         elif mode==-2:
             if leftPressed:
                 if not leftMem:
