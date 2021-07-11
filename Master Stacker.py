@@ -1,9 +1,23 @@
+from copy import deepcopy
 import math
 import os
 import pygame
 import random
 import sys
+EmptyLine:list=[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1]
+BigBagFull:tuple[int]=(12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)
+BlankGameBoard:list[list]=[list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+MediumBagFull:tuple[int]=(5,6,7,8,9,10,11)
+MediumBagList:list[int]=[5,6,7,8,9,10,11]
+MultiPlayerModes:set[int]={5,7}
+SinglePlayerModes:set[int]={1,2,3,4,6}
+Resolutions:tuple[tuple[int,int]]=((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160))
 Root35:float=math.sqrt(35)
+PiOverRoot35:float=math.pi/Root35
+LevelScoreMultipliers:tuple[int]=tuple([(29*(math.sin(PiOverRoot35*math.sqrt(i))/math.pi-math.sqrt(i)*math.cos(PiOverRoot35*math.sqrt(i))/Root35)+1)for i in range(36)])
+del Root35
+del PiOverRoot35
+SmallBagFull:tuple[int]=(1,2,3,4)
 def blits(blit_sequence:list[tuple[pygame.Surface,tuple[int,int],tuple[int,int,int,int]]])->None:
     global win
     for i in blit_sequence:
@@ -53,7 +67,7 @@ def updateSettings()->None:
     global playerBoardMasks
     user.seek(0)
     user.truncate()
-    user.write(str(minLvl)+"\n"+str(maxLvl)+"\n"+str(int(ghost))+"\n"+str(dasInit)+"\n"+str(dasSpeed)+"\n"+str(controlSetting)+"\n"+str(((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160)).index(resolution))+"\n"+str(int(fullscreen))+"\n"+str(int(garbageType))+"\n"+str(int(garbageBlocking))+"\n"+str(int(samePieces))+"\n"+str(int(newBags)))
+    user.write(str(minLvl)+"\n"+str(maxLvl)+"\n"+str(int(ghost))+"\n"+str(dasInit)+"\n"+str(dasSpeed)+"\n"+str(controlSetting)+"\n"+str(Resolutions.index(resolution))+"\n"+str(int(fullscreen))+"\n"+str(int(garbageType))+"\n"+str(int(garbageBlocking))+"\n"+str(int(samePieces))+"\n"+str(int(newBags)))
     settingsSTR=str(minLvl)+"\n"+str(maxLvl)+"\n"+str(dasInit)+"\n"+str(dasSpeed)+"\n"+str(int(newBags))
     playerBoardMasks=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(16*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
 try:
@@ -80,7 +94,7 @@ dasInit:int=int(x[3])
 dasSpeed:int=int(x[4])
 settingsSTR:str=x[0]+"\n"+x[1]+"\n"+x[3]+"\n"+x[4]+"\n"+x[11]
 controlSetting:int=int(x[5])
-resolution:tuple[int,int]=((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160))[int(x[6])]
+resolution:tuple[int,int]=Resolutions[int(x[6])]
 fullscreen:bool=bool(int(x[7]))
 garbageType:int=int(x[8])
 garbageBlocking:bool=bool(int(x[9]))
@@ -106,35 +120,11 @@ updateAssets()
 pygame.display.set_caption("Master Stacker")
 mode:int=0
 PieceTilemaps:list[list[list[list]]]=[[[[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,112,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,280,276,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,274,None,None],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,168,172,164,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,162,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,306,None,None],[None,None,313,308,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,314,308,None],[None,None,305,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,312,310,None],[None,None,None,305,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,306,None],[None,None,312,309,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,24,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,34,None,None],[None,None,41,44,36],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,42,36],[None,None,None,35,None],[None,None,None,33,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,40,44,38],[None,None,None,None,33],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,34,None],[None,None,None,35,None],[None,None,40,37,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,50,None],[None,56,60,53,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,50,None,None],[None,None,51,None,None],[None,None,57,52,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,58,60,52,None],[None,49,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,56,54,None,None],[None,None,51,None,None],[None,None,49,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,74,70,None],[None,None,73,69,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,90,84,None],[None,88,85,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,82,None,None],[None,None,89,86,None],[None,None,None,81,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,98,None,None],[None,104,109,100,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,None,107,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,104,110,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,104,103,None,None],[None,None,97,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,120,118,None],[None,None,None,121,116],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,114,None],[None,None,122,117,None],[None,None,113,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,130,None,None],[None,136,141,134,None],[None,None,None,129,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,130,None,None],[None,None,139,132,None],[None,136,133,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,130,None,None,None],[None,137,142,132,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,138,132,None],[None,136,135,None,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,146,None],[None,None,154,157,148],[None,None,145,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,152,150,None],[None,None,None,155,148],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,146],[None,None,152,158,149],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,146,None],[None,None,152,151,None],[None,None,None,153,148],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[24,28,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None]]],[[[None,None,None,None,None],[None,162,None,None,None],[None,169,172,172,164],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,170,164,None],[None,None,163,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,168,172,172,166],[None,None,None,None,161],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,162,None],[None,None,None,163,None],[None,None,None,163,None],[None,None,168,165,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,178],[None,184,188,188,181],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,178,None,None],[None,None,179,None,None],[None,None,179,None,None],[None,None,185,180,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,186,188,188,180],[None,177,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,184,182,None],[None,None,None,179,None],[None,None,None,179,None],[None,None,None,177,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,232,230,None,None],[None,None,233,236,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,234,229,None],[None,None,227,None,None],[None,None,225,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,232,236,230,None],[None,None,None,233,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,None,227,None],[None,None,234,229,None],[None,None,225,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,250,244],[None,248,252,245,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,243,None,None],[None,None,249,246,None],[None,None,None,241,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,250,252,244],[None,248,245,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,249,246,None],[None,None,None,243,None],[None,None,None,241,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,218,214,None],[None,None,217,221,212],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,218,214],[None,None,None,219,213],[None,None,None,209,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,216,222,214],[None,None,None,217,213],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,210,None],[None,None,218,215,None],[None,None,217,213,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,202,198,None],[None,200,205,197,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,194,None,None],[None,None,203,198,None],[None,None,201,197,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,202,206,196,None],[None,201,197,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,202,198,None,None],[None,201,199,None,None],[None,None,193,None,None],[None,None,None,None,None]]],[[[None,34,None,None,None],[None,41,44,38,None],[None,None,None,33,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,42,36,None],[None,None,35,None,None],[None,40,37,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,258,None,None],[None,None,259,None,None],[None,264,269,260,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,258,None,None,None],[None,267,268,260,None],[None,257,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,264,270,260,None],[None,None,259,None,None],[None,None,257,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,258,None],[None,264,268,263,None],[None,None,None,257,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,2,None,2,None],[None,9,12,5,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,10,4,None],[None,None,3,None,None],[None,None,9,4,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,10,12,6,None],[None,1,None,1,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,8,6,None,None],[None,None,3,None,None],[None,8,5,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,3,None,None,None],[None,9,12,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,10,12,4,None],[None,3,None,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,12,6,None],[None,None,None,3,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,None,3,None],[None,8,12,5,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,9,6,None,None],[None,None,9,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,10,4,None],[None,10,5,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,6,None,None],[None,None,9,6,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,10,5,None],[None,8,5,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,98,None,None],[None,104,111,100,None],[None,None,97,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,274,None],[None,280,284,285,276],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,274,None,None],[None,None,275,None,None],[None,None,283,276,None],[None,None,273,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,280,286,284,276],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,274,None],[None,None,280,279,None],[None,None,None,275,None],[None,None,None,273,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,290,None,None],[None,296,301,300,292],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,290,None,None],[None,None,299,292,None],[None,None,291,None,None],[None,None,289,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,296,300,302,292],[None,None,None,289,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,290,None],[None,None,None,291,None],[None,None,296,295,None],[None,None,None,289,None],[None,None,None,None,None]]],[[[None,None,None,None,50],[None,None,58,60,53],[None,None,49,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,56,54,None],[None,None,None,51,None],[None,None,None,57,52],[None,None,None,None,None],[None,None,None,None,None]]]]
-gameBoard:list[list]=[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
-pieceX:int=2
-pieceY:int=17
-pieceR:int=0
-pieceID:int=0
-lines:int=0
-level:int=0
-score:int=0
 name:str="      "
-nextPieces:list[int]=[]
-hold:int=0
-holdUsed:bool=False
 time:int=-1
-dasTimer:int=0
-fallTime:int=0
-lockTime:int=60
-pieceLowestY:int=17
-leftMem:bool=False
-rightMem:bool=False
-downMem:bool=False
-upMem:bool=False
-rotLMem:bool=False
-rotRMem:bool=False
-holdMem:bool=False
-pauseMem:bool=False
-toppedOut:bool=False
-gameWin:bool=False
+gameWin=False
 LineClearValues:tuple[tuple[int]]=((0,50,125,375,1500,7500),(0,0,1,2,4,6,9))
-combo:int=0
+combo=0
 fpsManager=pygame.time.Clock()
 currentBackground:pygame.Surface=asset("Backgrounds\\Menu\\1")
 WallKickData:tuple[tuple[int]]=((0,1),(-1,0),(1,0),(-1,1),(1,1),(0,-1),(1,-1),(1,-1),(0,0))
@@ -157,7 +147,7 @@ try:
             if i.type==pygame.QUIT:
                 raise KeyboardInterrupt
         keyboardInputs=pygame.key.get_pressed()
-        if mode in{5,7}:
+        if mode in MultiPlayerModes:
             leftPressed=[keyboardInputs[x]for x in[pygame.K_a,pygame.K_j,pygame.K_DELETE,pygame.K_KP4,pygame.K_v,pygame.K_LEFT]]
             rightPressed=[keyboardInputs[x]for x in[pygame.K_d,pygame.K_l,pygame.K_PAGEDOWN,pygame.K_KP6,pygame.K_n,pygame.K_RIGHT]]
             downPressed=[keyboardInputs[x]for x in[pygame.K_s,pygame.K_k,pygame.K_END,pygame.K_KP5,pygame.K_b,pygame.K_DOWN]]
@@ -177,14 +167,15 @@ try:
             rotRPressed=keyboardInputs[controlOptions[controlSetting]["rotR"]]
             holdPressed=keyboardInputs[controlOptions[controlSetting]["hold"]]
             pausePressed=keyboardInputs[controlOptions[controlSetting]["pause"]]
-        if mode in{1,2,3,4,6}:
+        if mode in SinglePlayerModes:
             if time==-1:
                 currentBackground=asset("Backgrounds\\Polymino Game"if mode==6 else"Backgrounds\\Standard Game")
-                gameBoard=[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+                print(BlankGameBoard)
+                gameBoard=deepcopy(BlankGameBoard)
                 if mode==6 and newBags:
-                    smallBag={1,2,3,4}
-                    mediumBag={5,6,7,8,9,10,11}
-                    bigBag={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                    smallBag=set(SmallBagFull)
+                    mediumBag=set(MediumBagFull)
+                    bigBag=set(BigBagFull)
                     nextPieces=[]
                     for i in range(4):
                         if i<2:
@@ -192,7 +183,7 @@ try:
                         nextPieces.append(mediumBag.pop())
                         nextPieces.append(bigBag.pop())
                 else:
-                    nextPieces=random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==6 else[5,6,7,8,9,10,11]
+                    nextPieces=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagList)
                 random.shuffle(nextPieces)
                 pieceID=nextPieces[0]
                 del nextPieces[0]
@@ -249,12 +240,13 @@ try:
                     if not upMem:
                         lockTime=1
                         pieceLowestY=0
-                        while not testPieceCollision():
-                            pieceY+=1
-                            score+=2
-                        pieceY-=1
-                        score-=2
-                        upMem=True
+                        if not testPieceCollision():
+                            while not testPieceCollision():
+                                pieceY+=1
+                                score+=2
+                            pieceY-=1
+                            score-=2
+                            upMem=True
                 else:
                     upMem=False
                 if rotLPressed:
@@ -332,14 +324,14 @@ try:
                                     if gameBoard[line+1][x]is not None and gameBoard[line+1][x]!=-1:
                                         gameBoard[line+1][x]=gameBoard[line+1][x]&-2
                                 del gameBoard[line]
-                                gameBoard.insert(0,[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1])
+                                gameBoard.insert(0,list(EmptyLine))
                         if linesCleared==0:
                             combo=0
                         else:
                             combo+=1
-                            score+=int(LineClearValues[0][linesCleared]*(0.95+0.05*combo)*(29*(math.sin(math.pi*math.sqrt(x)/Root35)/math.pi-math.sqrt(x)*math.cos(math.pi*math.sqrt(x)/Root35)/Root35)+1))
-                            if gameBoard==[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]:
-                                score+=int(45000*(0.95+0.05*combo)*(29*(math.sin(math.pi*math.sqrt(x)/Root35)/math.pi-math.sqrt(x)*math.cos(math.pi*math.sqrt(x)/Root35)/Root35)+1))
+                            score+=int(LineClearValues[0][linesCleared]*(0.95+0.05*combo)*LevelScoreMultipliers[level])
+                            if gameBoard==deepcopy(BlankGameBoard):
+                                score+=int(45000*(0.95+0.05*combo)*LevelScoreMultipliers[level])
                             if maxLvl>lines//10>level:
                                 level+=1
                         pieceID=nextPieces[0]
@@ -376,10 +368,10 @@ try:
                         for i in range(4):
                             if i<2:
                                 if len(smallBag)==0:
-                                    smallBag={1,2,3,4}
+                                    smallBag=set(SmallBagFull)
                                 temp.append(smallBag.pop())
                             if len(mediumBag)==0:
-                                mediumBag={5,6,7,8,9,10,11}
+                                mediumBag=set(MediumBagFull)
                             while True:
                                 temp2=mediumBag.pop()
                                 if temp2 in temp:
@@ -388,7 +380,7 @@ try:
                                     temp.append(temp2)
                                     break
                             if len(bigBag)==0:
-                                bigBag={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                                bigBag=set(BigBagFull)
                             while True:
                                 temp2=bigBag.pop()
                                 if temp2 in temp:
@@ -398,7 +390,7 @@ try:
                                     break
                         del temp2
                     else:
-                        temp=random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==6 else[5,6,7,8,9,10,11]
+                        temp=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagList)
                     random.shuffle(temp)
                     nextPieces+=temp
                     del temp
@@ -453,17 +445,17 @@ try:
                 mode=0
                 updateBackground()
                 gamePaused=False
-        elif mode in{5,7}:
+        elif mode in MultiPlayerModes:
             if time==-1:
                 currentBackground=asset("Backgrounds\\"+str(vsPlayerCount)+"P")
-                gameBoard=[[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]for i in range(vsPlayerCount)]
+                gameBoard=[deepcopy(BlankGameBoard) for i in range(vsPlayerCount)]
                 nextPieces=[[]for i in range(vsPlayerCount)]
                 pieceID=[None,]*vsPlayerCount
                 if samePieces:
                     if mode==7 and newBags:
-                        smallBag={1,2,3,4}
-                        mediumBag={5,6,7,8,9,10,11}
-                        bigBag={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                        smallBag=set(SmallBagFull)
+                        mediumBag=set(MediumBagFull)
+                        bigBag=set(BigBagFull)
                         x=[]
                         for i in range(4):
                             if i<2:
@@ -471,7 +463,7 @@ try:
                             x.append(mediumBag.pop())
                             x.append(bigBag.pop())
                     else:
-                        x=random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==7 else[5,6,7,8,9,10,11]
+                        x=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==7 else list(MediumBagList)
                     random.shuffle(x)
                 elif mode==7 and newBags:
                     smallBag=[set(),]*vsPlayerCount
@@ -479,9 +471,9 @@ try:
                     bigBag=[set(),]*vsPlayerCount
                 for i in range(vsPlayerCount):
                     if mode==7 and not samePieces and newBags:
-                        smallBag[i]={1,2,3,4}
-                        mediumBag[i]={5,6,7,8,9,10,11}
-                        bigBag[i]={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                        smallBag[i]=set(SmallBagFull)
+                        mediumBag[i]=set(MediumBagFull)
+                        bigBag[i]=set(BigBagFull)
                         nextPieces[i]=[]
                         for j in range(4):
                             if j<2:
@@ -489,7 +481,7 @@ try:
                             nextPieces[i].append(mediumBag[i].pop())
                             nextPieces[i].append(bigBag[i].pop())
                     else:
-                        nextPieces[i]=list(x)if samePieces else random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==7 else[5,6,7,8,9,10,11]
+                        nextPieces[i]=list(x)if samePieces else random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==7 else list(MediumBagList)
                     if not samePieces:
                         random.shuffle(nextPieces[i])
                     pieceID[i]=nextPieces[i][0]
@@ -633,11 +625,11 @@ try:
                                             if gameBoard[currentPlayerHandle][line+1][x]is not None and gameBoard[currentPlayerHandle][line+1][x]!=-1:
                                                 gameBoard[currentPlayerHandle][line+1][x]=gameBoard[currentPlayerHandle][line+1][x]&-2
                                         del gameBoard[currentPlayerHandle][line]
-                                        gameBoard[currentPlayerHandle].insert(0,[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1])
+                                        gameBoard[currentPlayerHandle].insert(0,list(EmptyLine))
                                 if linesCleared==0:
                                     combo[currentPlayerHandle]=0
                                     while garbage[currentPlayerHandle]>0:
-                                        if gameBoard[currentPlayerHandle][0]==[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1]:
+                                        if gameBoard[currentPlayerHandle][0]==list(EmptyLine):
                                             gameBoard[currentPlayerHandle].insert(40,random.choice([[None,8,12,12,12,12,12,12,12,4,-1,-1,-1,-1,-1],[0,None,8,12,12,12,12,12,12,4,-1,-1,-1,-1,-1],[8,4,None,8,12,12,12,12,12,4,-1,-1,-1,-1,-1],[8,12,4,None,8,12,12,12,12,4,-1,-1,-1,-1,-1],[8,12,12,4,None,8,12,12,12,4,-1,-1,-1,-1,-1],[8,12,12,12,4,None,8,12,12,4,-1,-1,-1,-1,-1],[8,12,12,12,12,4,None,8,12,4,-1,-1,-1,-1,-1],[8,12,12,12,12,12,4,None,8,4,-1,-1,-1,-1,-1],[8,12,12,12,12,12,12,4,None,0,-1,-1,-1,-1,-1],[8,12,12,12,12,12,12,12,4,None,-1,-1,-1,-1,-1]]))
                                             del gameBoard[currentPlayerHandle][0]
                                         else:
@@ -645,7 +637,7 @@ try:
                                         garbage[currentPlayerHandle]-=1
                                 else:
                                     combo[currentPlayerHandle]+=1
-                                    remainingAttack=LineClearValues[1][linesCleared]+(combo[currentPlayerHandle]-1)//2+9*(gameBoard[currentPlayerHandle]==[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]])
+                                    remainingAttack=LineClearValues[1][linesCleared]+(combo[currentPlayerHandle]-1)//2+9*(gameBoard[currentPlayerHandle]==deepcopy(BlankGameBoard))
                                     if garbage[currentPlayerHandle]>0 and garbageBlocking:
                                         while garbage[currentPlayerHandle]>0 and remainingAttack>0:
                                             garbage[currentPlayerHandle]-=1
@@ -682,10 +674,10 @@ try:
                                     for i in range(4):
                                         if i<2:
                                             if len(smallBag)==0:
-                                                smallBag={1,2,3,4}
+                                                smallBag=set(SmallBagFull)
                                             temp.append(smallBag.pop())
                                         if len(mediumBag)==0:
-                                            mediumBag={5,6,7,8,9,10,11}
+                                            mediumBag=set(MediumBagFull)
                                         while True:
                                             temp2=mediumBag.pop()
                                             if temp2 in temp:
@@ -694,7 +686,7 @@ try:
                                                 temp.append(temp2)
                                                 break
                                         if len(bigBag)==0:
-                                            bigBag={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                                            bigBag=set(BigBagFull)
                                         while True:
                                             temp2=bigBag.pop()
                                             if temp2 in temp:
@@ -708,10 +700,10 @@ try:
                                     for i in range(4):
                                         if i<2:
                                             if len(smallBag[currentPlayerHandle])==0:
-                                                smallBag[currentPlayerHandle]={1,2,3,4}
+                                                smallBag[currentPlayerHandle]=set(SmallBagFull)
                                             temp.append(smallBag[currentPlayerHandle].pop())
                                         if len(mediumBag[currentPlayerHandle])==0:
-                                            mediumBag[currentPlayerHandle]={5,6,7,8,9,10,11}
+                                            mediumBag[currentPlayerHandle]=set(MediumBagFull)
                                         while True:
                                             temp2=mediumBag[currentPlayerHandle].pop()
                                             if temp2 in temp:
@@ -720,7 +712,7 @@ try:
                                                 temp.append(temp2)
                                                 break
                                         if len(bigBag[currentPlayerHandle])==0:
-                                            bigBag[currentPlayerHandle]={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+                                            bigBag[currentPlayerHandle]=set(BigBagFull)
                                         while True:
                                             temp2=bigBag[currentPlayerHandle].pop()
                                             if temp2 in temp:
@@ -729,7 +721,7 @@ try:
                                                 temp.append(temp2)
                                                 break
                             else:
-                                temp=random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==6 else[5,6,7,8,9,10,11]
+                                temp=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagList)
                             random.shuffle(temp)
                             if samePieces:
                                 for i in[x for x in range(vsPlayerCount)if not toppedOut[x]]:
@@ -810,14 +802,14 @@ try:
                     if menuPage==0:
                         controlSetting=(controlSetting+1)%6
                         updateSettings()
-                    if menuPage in{1,2,3,4,7}:
+                    if menuPage in SinglePlayerModes:
                         currentLeaderboardLength=0
                         for i in leaderboards:
                             if i[0]==menuPage and i[4]==0:
                                 currentLeaderboardLength+=1
-                        if leaderboardScrollPosition<currentLeaderboardLength//5:
+                        if leaderboardScrollPosition<(currentLeaderboardLength-1)//5:
                             leaderboardScrollPosition+=1
-                    elif menuPage in{5,7}and vsPlayerCount<6:
+                    elif menuPage in MultiPlayerModes and vsPlayerCount<6:
                         vsPlayerCount+=1
                     downMem=True
             else:
@@ -827,16 +819,16 @@ try:
                     if menuPage==0:
                         controlSetting=(controlSetting-1)%6
                         updateSettings()
-                    elif menuPage in{1,2,3,4,7}and leaderboardScrollPosition>0:
+                    elif menuPage in SinglePlayerModes and leaderboardScrollPosition>0:
                         leaderboardScrollPosition-=1
-                    elif menuPage in{5,7}and vsPlayerCount>2:
+                    elif menuPage in MultiPlayerModes and vsPlayerCount>2:
                         vsPlayerCount-=1
                     upMem=True
             else:
                 upMem=False
             if pausePressed:
                 if not pauseMem:
-                    if menuPage in{1,2,3,4,6}:
+                    if menuPage in SinglePlayerModes:
                         leaderboardScrollPosition=0
                         mode=-2
                         time=-1
@@ -844,7 +836,7 @@ try:
                         leaderboardScrollPosition=0
                         mode=menuPage
                         time=-1
-                        if menuPage in{5,7}:
+                        if menuPage in MultiPlayerModes:
                             smallMode=True
                             updateAssets()
                     elif menuPage==-2:
@@ -921,7 +913,7 @@ try:
                     elif menuPage==4 and dasSpeed>1:
                         dasSpeed-=1
                     elif menuPage==5 and resolution!=(640,360):
-                        resolution=((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160))[((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160)).index(resolution)-1]
+                        resolution=Resolutions[Resolutions.index(resolution)-1]
                         updateAssets()
                     elif menuPage==6 and not fullscreen:
                         fullscreen=True
@@ -950,7 +942,7 @@ try:
                     elif menuPage==4:
                         dasSpeed+=1
                     elif menuPage==5 and resolution!=(3840,2160):
-                        resolution=((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160))[((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160)).index(resolution)+1]
+                        resolution=Resolutions[Resolutions.index(resolution)+1]
                         updateAssets()
                         playerBoardMasks=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
                     elif menuPage==6 and fullscreen:
