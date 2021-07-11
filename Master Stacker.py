@@ -192,7 +192,7 @@ try:
                         nextPieces.append(mediumBag.pop())
                         nextPieces.append(bigBag.pop())
                 else:
-                    nextPieces=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==6 else[5,6,7,8,9,10,11]
+                    nextPieces=random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==6 else[5,6,7,8,9,10,11]
                 random.shuffle(nextPieces)
                 pieceID=nextPieces[0]
                 del nextPieces[0]
@@ -398,7 +398,7 @@ try:
                                     break
                         del temp2
                     else:
-                        temp=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==6 else[5,6,7,8,9,10,11]
+                        temp=random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==6 else[5,6,7,8,9,10,11]
                     random.shuffle(temp)
                     nextPieces+=temp
                     del temp
@@ -458,7 +458,7 @@ try:
                 currentBackground=asset("Backgrounds\\"+str(vsPlayerCount)+"P")
                 gameBoard=[[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]for i in range(vsPlayerCount)]
                 nextPieces=[[]for i in range(vsPlayerCount)]
-                pieceID=[0,]*vsPlayerCount
+                pieceID=[None,]*vsPlayerCount
                 if samePieces:
                     if mode==7 and newBags:
                         smallBag={1,2,3,4}
@@ -471,21 +471,25 @@ try:
                             x.append(mediumBag.pop())
                             x.append(bigBag.pop())
                     else:
-                        x=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==7 else[5,6,7,8,9,10,11]
+                        x=random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==7 else[5,6,7,8,9,10,11]
                     random.shuffle(x)
+                elif mode==7 and newBags:
+                    smallBag=[set(),]*vsPlayerCount
+                    mediumBag=[set(),]*vsPlayerCount
+                    bigBag=[set(),]*vsPlayerCount
                 for i in range(vsPlayerCount):
                     if mode==7 and not samePieces and newBags:
                         smallBag[i]={1,2,3,4}
                         mediumBag[i]={5,6,7,8,9,10,11}
                         bigBag[i]={12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
                         nextPieces[i]=[]
-                        for i in range(4):
-                            if i<2:
+                        for j in range(4):
+                            if j<2:
                                 nextPieces[i].append(smallBag[i].pop())
                             nextPieces[i].append(mediumBag[i].pop())
                             nextPieces[i].append(bigBag[i].pop())
                     else:
-                        nextPieces[i]=list(x)if samePieces else random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==7 else[5,6,7,8,9,10,11]
+                        nextPieces[i]=list(x)if samePieces else random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==7 else[5,6,7,8,9,10,11]
                     if not samePieces:
                         random.shuffle(nextPieces[i])
                     pieceID[i]=nextPieces[i][0]
@@ -672,7 +676,7 @@ try:
                                     pieceLowestY[currentPlayerHandle]=pieceY[currentPlayerHandle]
                                     lockTime[currentPlayerHandle]=60
                         if len(nextPieces[currentPlayerHandle])<5:
-                            if mode==6 and newBags:
+                            if mode==7 and newBags:
                                 if samePieces:
                                     temp=[]
                                     for i in range(4):
@@ -725,7 +729,7 @@ try:
                                                 temp.append(temp2)
                                                 break
                             else:
-                                temp=random.sample({1,2,3,4},2)+random.sample({5,6,7,8,9,10,11},4)+random.sample({12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},4)if mode==6 else[5,6,7,8,9,10,11]
+                                temp=random.sample((1,2,3,4),2)+random.sample((5,6,7,8,9,10,11),4)+random.sample((12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29),4)if mode==6 else[5,6,7,8,9,10,11]
                             random.shuffle(temp)
                             if samePieces:
                                 for i in[x for x in range(vsPlayerCount)if not toppedOut[x]]:
