@@ -3,34 +3,34 @@ import os
 import pygame
 import random
 import sys
-root35=math.sqrt(35)
-def blits(blit_sequence):
+Root35:float=math.sqrt(35)
+def blits(blit_sequence:list[tuple[pygame.Surface,tuple[int,int],tuple[int,int,int,int]]])->None:
     global win
     for i in blit_sequence:
         win.blit(i[0],(i[1][0]*scaleFactor//(smallMode+1),i[1][1]*scaleFactor//(smallMode+1)),(i[2][0]*scaleFactor//(smallMode+1),i[2][1]*scaleFactor//(smallMode+1),i[2][2]*scaleFactor//(smallMode+1),i[2][3]*scaleFactor//(smallMode+1)))
-def drawText(text,pos,specialCharacterSubstitutions={}):
-    blitData=[]
+def drawText(text:str,pos:tuple[int,int],specialCharacterSubstitutions:dict[str,int]={})->None:
+    blitData:list[tuple[pygame.Surface,tuple[int,int],tuple[int,int,int,int]]]=[]
     for i in range(len(text)):
         blitData.append((specialChars,(pos[0]+i*8,pos[1]),(specialCharacterSubstitutions[text[i]]%16*8,specialCharacterSubstitutions[text[i]]//16*8,8,8))if text[i]in specialCharacterSubstitutions else(font,(pos[0]+i*8,pos[1]),(ord(text[i])%16*8,(ord(text[i])-32*(ord(text[i])//128)-32)//16*8,8,8)))
     blits(blitData)
-def updateBackground():
+def updateBackground()->None:
     win.blit(currentBackground,(0,0))
-def asset(path):
+def asset(path:str)->pygame.Surface:
     return pygame.image.load("Assets\\"+str(resolution[1])+"p\\"+("Small Mode\\"if smallMode else"")+path+".png")
-def drawPiece(x,y,pieceID,pieceR=0,ghost=False):
+def drawPiece(x:int,y:int,pieceID:int,pieceR:int=0,ghost:bool=False)->None:
     blitdata=[]
     for x2 in range(5):
         for y2 in range(5):
-            if pieceTilemaps[pieceID][pieceR][y2][x2]is not None:
-                blitdata.append((ghosts if ghost else pieces,(x+x2*8,y+y2*8),(pieceTilemaps[pieceID][pieceR][y2][x2]//16*8,pieceTilemaps[pieceID][pieceR][y2][x2]%16*8,8,8)))
+            if PieceTilemaps[pieceID][pieceR][y2][x2]is not None:
+                blitdata.append((ghosts if ghost else pieces,(x+x2*8,y+y2*8),(PieceTilemaps[pieceID][pieceR][y2][x2]//16*8,PieceTilemaps[pieceID][pieceR][y2][x2]%16*8,8,8)))
     blits(blitdata)
-def testPieceCollision(player=None):
+def testPieceCollision(player=None)->bool:
     for x in range(5):
         for y in range(5):
-            if(pieceTilemaps[pieceID][pieceR][y][x]if player is None else pieceTilemaps[pieceID[player]][pieceR[player]][y][x])is not None and(gameBoard[pieceY+y][pieceX+x]if player is None else gameBoard[player][pieceY[player]+y][pieceX[player]+x])is not None:
+            if(PieceTilemaps[pieceID][pieceR][y][x]if player is None else PieceTilemaps[pieceID[player]][pieceR[player]][y][x])is not None and(gameBoard[pieceY+y][pieceX+x]if player is None else gameBoard[player][pieceY[player]+y][pieceX[player]+x])is not None:
                 return True
     return False
-def updateAssets():
+def updateAssets()->None:
     global font
     global garbageMeter
     global ghosts
@@ -47,7 +47,7 @@ def updateAssets():
         specialChars=asset("Special Characters")
         font=asset("Font")
     ghosts=asset("Ghosts")
-def updateSettings():
+def updateSettings()->None:
     global user
     global settingsSTR
     global playerBoardMasks
@@ -70,26 +70,26 @@ try:
 except OSError:
     pass
 user=open("user.ini","r+")
-lines=user.readlines()
-x=list(map(lambda y:y[:-1],lines))[:-1]+[lines[-1],]
+lines:list[str]=user.readlines()
+x:list[str]=list(map(lambda y:y[:-1],lines))[:-1]+[lines[-1],]
 del lines
-minLvl=int(x[0])
-maxLvl=int(x[1])
-ghost=bool(int(x[2]))
-dasInit=int(x[3])
-dasSpeed=int(x[4])
-settingsSTR=x[0]+"\n"+x[1]+"\n"+x[3]+"\n"+x[4]+"\n"+x[11]
-controlSetting=int(x[5])
-resolution=((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160))[int(x[6])]
-fullscreen=bool(int(x[7]))
-garbageType=int(x[8])
-garbageBlocking=bool(int(x[9]))
-samePieces=bool(int(x[10]))
-newBags=bool(int(x[11]))
+minLvl:int=int(x[0])
+maxLvl:int=int(x[1])
+ghost:bool=bool(int(x[2]))
+dasInit:int=int(x[3])
+dasSpeed:int=int(x[4])
+settingsSTR:str=x[0]+"\n"+x[1]+"\n"+x[3]+"\n"+x[4]+"\n"+x[11]
+controlSetting:int=int(x[5])
+resolution:tuple[int,int]=((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160))[int(x[6])]
+fullscreen:bool=bool(int(x[7]))
+garbageType:int=int(x[8])
+garbageBlocking:bool=bool(int(x[9]))
+samePieces:bool=bool(int(x[10]))
+newBags:bool=bool(int(x[11]))
 del x
 boards=open("boards")
 lines=boards.readlines()
-x=[]if lines==[]else list(map(lambda y:y[:-1],lines))[:-1]+[lines[-1],]
+x:list[str]=[]if lines==[]else list(map(lambda y:y[:-1],lines))[:-1]+[lines[-1],]
 del lines
 leaderboards=[]
 for i in range(0,len(x)-1,8):
@@ -97,60 +97,60 @@ for i in range(0,len(x)-1,8):
 del x
 boards.close()
 boards=open("boards","a")
-controlOptions=[{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_UP,"rotL":pygame.K_z,"rotR":pygame.K_x,"hold":pygame.K_c,"pause":pygame.K_SPACE},{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_UP,"rotL":pygame.K_x,"rotR":pygame.K_z,"hold":pygame.K_c,"pause":pygame.K_SPACE},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_k,"rotR":pygame.K_l,"hold":pygame.K_SEMICOLON,"pause":pygame.K_SPACE},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_l,"rotR":pygame.K_k,"hold":pygame.K_SEMICOLON,"pause":pygame.K_SPACE},{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_SPACE,"rotL":pygame.K_z,"rotR":pygame.K_UP,"hold":pygame.K_x,"pause":pygame.K_p},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_q,"rotR":pygame.K_e,"hold":pygame.K_r,"pause":pygame.K_SPACE}]
-smallMode=False
+controlOptions:list[dict[str,int]]=[{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_UP,"rotL":pygame.K_z,"rotR":pygame.K_x,"hold":pygame.K_c,"pause":pygame.K_SPACE},{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_UP,"rotL":pygame.K_x,"rotR":pygame.K_z,"hold":pygame.K_c,"pause":pygame.K_SPACE},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_k,"rotR":pygame.K_l,"hold":pygame.K_SEMICOLON,"pause":pygame.K_SPACE},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_l,"rotR":pygame.K_k,"hold":pygame.K_SEMICOLON,"pause":pygame.K_SPACE},{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_SPACE,"rotL":pygame.K_z,"rotR":pygame.K_UP,"hold":pygame.K_x,"pause":pygame.K_p},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_q,"rotR":pygame.K_e,"hold":pygame.K_r,"pause":pygame.K_SPACE}]
+smallMode:bool=False
 pygame.init()
 pygame.mouse.set_visible(False)
 pygame.display.set_icon(pygame.image.load("Assets\\Icon.png"))
 updateAssets()
 pygame.display.set_caption("Master Stacker")
-mode=0
-pieceTilemaps=[[[[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,112,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,280,276,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,274,None,None],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,168,172,164,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,162,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,306,None,None],[None,None,313,308,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,314,308,None],[None,None,305,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,312,310,None],[None,None,None,305,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,306,None],[None,None,312,309,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,24,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,34,None,None],[None,None,41,44,36],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,42,36],[None,None,None,35,None],[None,None,None,33,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,40,44,38],[None,None,None,None,33],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,34,None],[None,None,None,35,None],[None,None,40,37,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,50,None],[None,56,60,53,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,50,None,None],[None,None,51,None,None],[None,None,57,52,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,58,60,52,None],[None,49,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,56,54,None,None],[None,None,51,None,None],[None,None,49,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,74,70,None],[None,None,73,69,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,90,84,None],[None,88,85,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,82,None,None],[None,None,89,86,None],[None,None,None,81,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,98,None,None],[None,104,109,100,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,None,107,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,104,110,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,104,103,None,None],[None,None,97,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,120,118,None],[None,None,None,121,116],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,114,None],[None,None,122,117,None],[None,None,113,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,130,None,None],[None,136,141,134,None],[None,None,None,129,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,130,None,None],[None,None,139,132,None],[None,136,133,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,130,None,None,None],[None,137,142,132,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,138,132,None],[None,136,135,None,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,146,None],[None,None,154,157,148],[None,None,145,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,152,150,None],[None,None,None,155,148],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,146],[None,None,152,158,149],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,146,None],[None,None,152,151,None],[None,None,None,153,148],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[24,28,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None]]],[[[None,None,None,None,None],[None,162,None,None,None],[None,169,172,172,164],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,170,164,None],[None,None,163,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,168,172,172,166],[None,None,None,None,161],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,162,None],[None,None,None,163,None],[None,None,None,163,None],[None,None,168,165,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,178],[None,184,188,188,181],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,178,None,None],[None,None,179,None,None],[None,None,179,None,None],[None,None,185,180,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,186,188,188,180],[None,177,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,184,182,None],[None,None,None,179,None],[None,None,None,179,None],[None,None,None,177,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,232,230,None,None],[None,None,233,236,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,234,229,None],[None,None,227,None,None],[None,None,225,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,232,236,230,None],[None,None,None,233,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,None,227,None],[None,None,234,229,None],[None,None,225,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,250,244],[None,248,252,245,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,243,None,None],[None,None,249,246,None],[None,None,None,241,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,250,252,244],[None,248,245,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,249,246,None],[None,None,None,243,None],[None,None,None,241,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,218,214,None],[None,None,217,221,212],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,218,214],[None,None,None,219,213],[None,None,None,209,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,216,222,214],[None,None,None,217,213],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,210,None],[None,None,218,215,None],[None,None,217,213,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,202,198,None],[None,200,205,197,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,194,None,None],[None,None,203,198,None],[None,None,201,197,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,202,206,196,None],[None,201,197,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,202,198,None,None],[None,201,199,None,None],[None,None,193,None,None],[None,None,None,None,None]]],[[[None,34,None,None,None],[None,41,44,38,None],[None,None,None,33,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,42,36,None],[None,None,35,None,None],[None,40,37,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,258,None,None],[None,None,259,None,None],[None,264,269,260,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,258,None,None,None],[None,267,268,260,None],[None,257,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,264,270,260,None],[None,None,259,None,None],[None,None,257,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,258,None],[None,264,268,263,None],[None,None,None,257,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,2,None,2,None],[None,9,12,5,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,10,4,None],[None,None,3,None,None],[None,None,9,4,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,10,12,6,None],[None,1,None,1,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,8,6,None,None],[None,None,3,None,None],[None,8,5,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,3,None,None,None],[None,9,12,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,10,12,4,None],[None,3,None,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,12,6,None],[None,None,None,3,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,None,3,None],[None,8,12,5,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,9,6,None,None],[None,None,9,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,10,4,None],[None,10,5,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,6,None,None],[None,None,9,6,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,10,5,None],[None,8,5,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,98,None,None],[None,104,111,100,None],[None,None,97,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,274,None],[None,280,284,285,276],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,274,None,None],[None,None,275,None,None],[None,None,283,276,None],[None,None,273,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,280,286,284,276],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,274,None],[None,None,280,279,None],[None,None,None,275,None],[None,None,None,273,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,290,None,None],[None,296,301,300,292],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,290,None,None],[None,None,299,292,None],[None,None,291,None,None],[None,None,289,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,296,300,302,292],[None,None,None,289,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,290,None],[None,None,None,291,None],[None,None,296,295,None],[None,None,None,289,None],[None,None,None,None,None]]],[[[None,None,None,None,50],[None,None,58,60,53],[None,None,49,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,56,54,None],[None,None,None,51,None],[None,None,None,57,52],[None,None,None,None,None],[None,None,None,None,None]]]]
-gameBoard=[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
-pieceX=2
-pieceY=17
-pieceR=0
-pieceID=0
-lines=0
-level=0
-score=0
-name="      "
-nextPieces=[]
-hold=0
-holdUsed=False
-time=-1
-dasTimer=0
-fallTime=0
-lockTime=60
-pieceLowestY=17
-leftMem=False
-rightMem=False
-downMem=False
-upMem=False
-rotLMem=False
-rotRMem=False
-holdMem=False
-pauseMem=False
-toppedOut=False
-gameWin=False
-lineClearValues=((0,50,125,375,1500,7500),(0,0,1,2,4,6,9))
-combo=0
+mode:int=0
+PieceTilemaps:list[list[list[list]]]=[[[[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,112,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,280,276,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,274,None,None],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,168,172,164,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,162,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,306,None,None],[None,None,313,308,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,314,308,None],[None,None,305,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,312,310,None],[None,None,None,305,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,306,None],[None,None,312,309,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,24,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,34,None,None],[None,None,41,44,36],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,42,36],[None,None,None,35,None],[None,None,None,33,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,40,44,38],[None,None,None,None,33],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,34,None],[None,None,None,35,None],[None,None,40,37,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,50,None],[None,56,60,53,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,50,None,None],[None,None,51,None,None],[None,None,57,52,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,58,60,52,None],[None,49,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,56,54,None,None],[None,None,51,None,None],[None,None,49,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,74,70,None],[None,None,73,69,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,90,84,None],[None,88,85,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,82,None,None],[None,None,89,86,None],[None,None,None,81,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,98,None,None],[None,104,109,100,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,None,107,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,104,110,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,104,103,None,None],[None,None,97,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,120,118,None],[None,None,None,121,116],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,114,None],[None,None,122,117,None],[None,None,113,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,130,None,None],[None,136,141,134,None],[None,None,None,129,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,130,None,None],[None,None,139,132,None],[None,136,133,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,130,None,None,None],[None,137,142,132,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,138,132,None],[None,136,135,None,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,146,None],[None,None,154,157,148],[None,None,145,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,152,150,None],[None,None,None,155,148],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,146],[None,None,152,158,149],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,146,None],[None,None,152,151,None],[None,None,None,153,148],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[24,28,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None]]],[[[None,None,None,None,None],[None,162,None,None,None],[None,169,172,172,164],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,170,164,None],[None,None,163,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,168,172,172,166],[None,None,None,None,161],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,162,None],[None,None,None,163,None],[None,None,None,163,None],[None,None,168,165,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,178],[None,184,188,188,181],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,178,None,None],[None,None,179,None,None],[None,None,179,None,None],[None,None,185,180,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,186,188,188,180],[None,177,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,184,182,None],[None,None,None,179,None],[None,None,None,179,None],[None,None,None,177,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,232,230,None,None],[None,None,233,236,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,234,229,None],[None,None,227,None,None],[None,None,225,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,232,236,230,None],[None,None,None,233,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,None,227,None],[None,None,234,229,None],[None,None,225,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,250,244],[None,248,252,245,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,243,None,None],[None,None,249,246,None],[None,None,None,241,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,250,252,244],[None,248,245,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,249,246,None],[None,None,None,243,None],[None,None,None,241,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,218,214,None],[None,None,217,221,212],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,218,214],[None,None,None,219,213],[None,None,None,209,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,216,222,214],[None,None,None,217,213],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,210,None],[None,None,218,215,None],[None,None,217,213,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,202,198,None],[None,200,205,197,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,194,None,None],[None,None,203,198,None],[None,None,201,197,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,202,206,196,None],[None,201,197,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,202,198,None,None],[None,201,199,None,None],[None,None,193,None,None],[None,None,None,None,None]]],[[[None,34,None,None,None],[None,41,44,38,None],[None,None,None,33,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,42,36,None],[None,None,35,None,None],[None,40,37,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,258,None,None],[None,None,259,None,None],[None,264,269,260,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,258,None,None,None],[None,267,268,260,None],[None,257,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,264,270,260,None],[None,None,259,None,None],[None,None,257,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,258,None],[None,264,268,263,None],[None,None,None,257,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,2,None,2,None],[None,9,12,5,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,10,4,None],[None,None,3,None,None],[None,None,9,4,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,10,12,6,None],[None,1,None,1,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,8,6,None,None],[None,None,3,None,None],[None,8,5,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,3,None,None,None],[None,9,12,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,10,12,4,None],[None,3,None,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,12,6,None],[None,None,None,3,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,None,3,None],[None,8,12,5,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,9,6,None,None],[None,None,9,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,10,4,None],[None,10,5,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,6,None,None],[None,None,9,6,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,10,5,None],[None,8,5,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,98,None,None],[None,104,111,100,None],[None,None,97,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,274,None],[None,280,284,285,276],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,274,None,None],[None,None,275,None,None],[None,None,283,276,None],[None,None,273,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,280,286,284,276],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,274,None],[None,None,280,279,None],[None,None,None,275,None],[None,None,None,273,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,290,None,None],[None,296,301,300,292],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,290,None,None],[None,None,299,292,None],[None,None,291,None,None],[None,None,289,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,296,300,302,292],[None,None,None,289,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,290,None],[None,None,None,291,None],[None,None,296,295,None],[None,None,None,289,None],[None,None,None,None,None]]],[[[None,None,None,None,50],[None,None,58,60,53],[None,None,49,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,56,54,None],[None,None,None,51,None],[None,None,None,57,52],[None,None,None,None,None],[None,None,None,None,None]]]]
+gameBoard:list[list]=[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+pieceX:int=2
+pieceY:int=17
+pieceR:int=0
+pieceID:int=0
+lines:int=0
+level:int=0
+score:int=0
+name:str="      "
+nextPieces:list[int]=[]
+hold:int=0
+holdUsed:bool=False
+time:int=-1
+dasTimer:int=0
+fallTime:int=0
+lockTime:int=60
+pieceLowestY:int=17
+leftMem:bool=False
+rightMem:bool=False
+downMem:bool=False
+upMem:bool=False
+rotLMem:bool=False
+rotRMem:bool=False
+holdMem:bool=False
+pauseMem:bool=False
+toppedOut:bool=False
+gameWin:bool=False
+LineClearValues:tuple[tuple[int]]=((0,50,125,375,1500,7500),(0,0,1,2,4,6,9))
+combo:int=0
 fpsManager=pygame.time.Clock()
-currentBackground=asset("Backgrounds\\Menu\\1")
-wallkickData=((0,1),(-1,0),(1,0),(-1,1),(1,1),(0,-1),(1,-1),(1,-1),(0,0))
-gamePaused=False
-menuPage=1
+currentBackground:pygame.Surface=asset("Backgrounds\\Menu\\1")
+WallKickData:tuple[tuple[int]]=((0,1),(-1,0),(1,0),(-1,1),(1,1),(0,-1),(1,-1),(1,-1),(0,0))
+gamePaused:bool=False
+menuPage:int=1
 leaderboardScrollPosition=0
-vsPlayerCount=2
-nameEntryPos=0
-handlePlayer=0
-playerBoardMasks=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(16*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
-playerHoldPositions=(((104,96),(360,96)),((24,96),(232,96),(440,96)),((104,16),(360,16),(104,200),(360,200)),((24,16),(232,16),(440,16),(104,200),(360,200)),((24,16),(232,16),(440,16),(24,200),(232,200),(440,200)))
-playerNextPositions=(((240,96),(496,96)),((160,96),(368,96),(576,96)),((240,16),(496,16),(240,200),(496,200)),((160,16),(368,16),(576,16),(240,200),(496,200)),((160,16),(368,16),(576,16),(160,200),(368,200),(576,200)))
-playerBoardPositions=(((152,-72),(408,-72)),((72,-72),(280,-72),(488,-72)),((152,-152),(408,-152),(152,32),(408,32)),((72,-152),(280,-152),(488,-152),(152,32),(408,32)),((72,-152),(280,-152),(488,-152),(72,32),(280,32),(488,32)))
-playerGarbageMeterPositions=(((148,128),(404,128)),((68,128),(276,128),(484,128)),((148,48),(404,48),(148,232),(404,232)),((68,48),(276,48),(484,48),(148,232),(404,232)),((68,48),(276,48),(484,48),(68,232),(276,232),(484,232)))
-garbage=[0,]
-remainingAttack=0
+vsPlayerCount:int=2
+nameEntryPos:int=0
+handlePlayer:int=0
+playerBoardMasks:list[list[pygame.Rect]]=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(16*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
+PlayerHoldPositions:tuple[tuple[tuple[int,int]]]=(((104,96),(360,96)),((24,96),(232,96),(440,96)),((104,16),(360,16),(104,200),(360,200)),((24,16),(232,16),(440,16),(104,200),(360,200)),((24,16),(232,16),(440,16),(24,200),(232,200),(440,200)))
+PlayerNextPositions:tuple[tuple[tuple[int,int]]]=(((240,96),(496,96)),((160,96),(368,96),(576,96)),((240,16),(496,16),(240,200),(496,200)),((160,16),(368,16),(576,16),(240,200),(496,200)),((160,16),(368,16),(576,16),(160,200),(368,200),(576,200)))
+PlayerBoardPositions:tuple[tuple[tuple[int,int]]]=(((152,-72),(408,-72)),((72,-72),(280,-72),(488,-72)),((152,-152),(408,-152),(152,32),(408,32)),((72,-152),(280,-152),(488,-152),(152,32),(408,32)),((72,-152),(280,-152),(488,-152),(72,32),(280,32),(488,32)))
+PlayerGarbageMeterPositions:tuple[tuple[tuple[int,int]]]=(((148,128),(404,128)),((68,128),(276,128),(484,128)),((148,48),(404,48),(148,232),(404,232)),((68,48),(276,48),(484,48),(148,232),(404,232)),((68,48),(276,48),(484,48),(68,232),(276,232),(484,232)))
+garbage:list[int]=[]
+remainingAttack:int=0
 try:
     while True:
         for i in pygame.event.get():
@@ -259,33 +259,33 @@ try:
                     upMem=False
                 if rotLPressed:
                     if not rotLMem:
-                        pieceR=(pieceR-1)%len(pieceTilemaps[pieceID])
+                        pieceR=(pieceR-1)%len(PieceTilemaps[pieceID])
                         if testPieceCollision():
                             for i in range(8):
-                                pieceX+=wallkickData[i][0]-wallkickData[i-1][0]
-                                pieceY+=wallkickData[i][1]-wallkickData[i-1][1]
+                                pieceX+=WallKickData[i][0]-WallKickData[i-1][0]
+                                pieceY+=WallKickData[i][1]-WallKickData[i-1][1]
                                 if not testPieceCollision():
                                     break
                             if testPieceCollision():
                                 pieceX-=1
                                 pieceY+=1
-                                pieceR=(pieceR+1)%len(pieceTilemaps[pieceID])
+                                pieceR=(pieceR+1)%len(PieceTilemaps[pieceID])
                         rotLMem=True
                 else:
                     rotLMem=False
                 if rotRPressed:
                     if not rotRMem:
-                        pieceR=(pieceR+1)%len(pieceTilemaps[pieceID])
+                        pieceR=(pieceR+1)%len(PieceTilemaps[pieceID])
                         if testPieceCollision():
                             for i in range(8):
-                                pieceX-=wallkickData[i][0]-wallkickData[i-1][0]
-                                pieceY+=wallkickData[i][1]-wallkickData[i-1][1]
+                                pieceX-=WallKickData[i][0]-WallKickData[i-1][0]
+                                pieceY+=WallKickData[i][1]-WallKickData[i-1][1]
                                 if not testPieceCollision():
                                     break
                             if testPieceCollision():
                                 pieceX+=1
                                 pieceY+=1
-                                pieceR=(pieceR-1)%len(pieceTilemaps[pieceID])
+                                pieceR=(pieceR-1)%len(PieceTilemaps[pieceID])
                         rotRMem=True
                 else:
                     rotRMem=False
@@ -316,9 +316,9 @@ try:
                     if lockTime==0:
                         for x in range(5):
                             for y in range(5):
-                                if pieceTilemaps[pieceID][pieceR][y][x]is not None:
+                                if PieceTilemaps[pieceID][pieceR][y][x]is not None:
                                     if gameBoard[pieceY+y][pieceX+x]is None:
-                                        gameBoard[pieceY+y][pieceX+x]=pieceTilemaps[pieceID][pieceR][y][x]
+                                        gameBoard[pieceY+y][pieceX+x]=PieceTilemaps[pieceID][pieceR][y][x]
                                     else:
                                         toppedOut=True
                         linesCleared=0
@@ -337,9 +337,9 @@ try:
                             combo=0
                         else:
                             combo+=1
-                            score+=int(lineClearValues[0][linesCleared]*(0.95+0.05*combo)*(29*(math.sin(math.pi*math.sqrt(x)/root35)/math.pi-math.sqrt(x)*math.cos(math.pi*math.sqrt(x)/root35)/root35)+1))
+                            score+=int(LineClearValues[0][linesCleared]*(0.95+0.05*combo)*(29*(math.sin(math.pi*math.sqrt(x)/Root35)/math.pi-math.sqrt(x)*math.cos(math.pi*math.sqrt(x)/Root35)/Root35)+1))
                             if gameBoard==[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]:
-                                score+=int(45000*(0.95+0.05*combo)*(29*(math.sin(math.pi*math.sqrt(x)/root35)/math.pi-math.sqrt(x)*math.cos(math.pi*math.sqrt(x)/root35)/root35)+1))
+                                score+=int(45000*(0.95+0.05*combo)*(29*(math.sin(math.pi*math.sqrt(x)/Root35)/math.pi-math.sqrt(x)*math.cos(math.pi*math.sqrt(x)/Root35)/Root35)+1))
                             if maxLvl>lines//10>level:
                                 level+=1
                         pieceID=nextPieces[0]
@@ -561,33 +561,33 @@ try:
                             upMem[currentPlayerHandle]=False
                         if rotLPressed[currentPlayerHandle]:
                             if not rotLMem[currentPlayerHandle]:
-                                pieceR[currentPlayerHandle]=(pieceR[currentPlayerHandle]-1)%len(pieceTilemaps[pieceID[currentPlayerHandle]])
+                                pieceR[currentPlayerHandle]=(pieceR[currentPlayerHandle]-1)%len(PieceTilemaps[pieceID[currentPlayerHandle]])
                                 if testPieceCollision(currentPlayerHandle):
                                     for i in range(8):
-                                        pieceX[currentPlayerHandle]+=wallkickData[i][0]-wallkickData[i-1][0]
-                                        pieceY[currentPlayerHandle]+=wallkickData[i][1]-wallkickData[i-1][1]
+                                        pieceX[currentPlayerHandle]+=WallKickData[i][0]-WallKickData[i-1][0]
+                                        pieceY[currentPlayerHandle]+=WallKickData[i][1]-WallKickData[i-1][1]
                                         if not testPieceCollision(currentPlayerHandle):
                                             break
                                     if testPieceCollision(currentPlayerHandle):
                                         pieceX[currentPlayerHandle]-=1
                                         pieceY[currentPlayerHandle]+=1
-                                        pieceR[currentPlayerHandle]=(pieceR[currentPlayerHandle]+1)%len(pieceTilemaps[pieceID[currentPlayerHandle]])
+                                        pieceR[currentPlayerHandle]=(pieceR[currentPlayerHandle]+1)%len(PieceTilemaps[pieceID[currentPlayerHandle]])
                                 rotLMem[currentPlayerHandle]=True
                         else:
                             rotLMem[currentPlayerHandle]=False
                         if rotRPressed[currentPlayerHandle]:
                             if not rotRMem[currentPlayerHandle]:
-                                pieceR[currentPlayerHandle]=(pieceR[currentPlayerHandle]+1)%len(pieceTilemaps[pieceID[currentPlayerHandle]])
+                                pieceR[currentPlayerHandle]=(pieceR[currentPlayerHandle]+1)%len(PieceTilemaps[pieceID[currentPlayerHandle]])
                                 if testPieceCollision(currentPlayerHandle):
                                     for i in range(8):
-                                        pieceX[currentPlayerHandle]-=wallkickData[i][0]-wallkickData[i-1][0]
-                                        pieceY[currentPlayerHandle]+=wallkickData[i][1]-wallkickData[i-1][1]
+                                        pieceX[currentPlayerHandle]-=WallKickData[i][0]-WallKickData[i-1][0]
+                                        pieceY[currentPlayerHandle]+=WallKickData[i][1]-WallKickData[i-1][1]
                                         if not testPieceCollision(currentPlayerHandle):
                                             break
                                     if testPieceCollision(currentPlayerHandle):
                                         pieceX[currentPlayerHandle]+=1
                                         pieceY[currentPlayerHandle]+=1
-                                        pieceR[currentPlayerHandle]=(pieceR[currentPlayerHandle]-1)%len(pieceTilemaps[pieceID[currentPlayerHandle]])
+                                        pieceR[currentPlayerHandle]=(pieceR[currentPlayerHandle]-1)%len(PieceTilemaps[pieceID[currentPlayerHandle]])
                                 rotRMem[currentPlayerHandle]=True
                         else:
                             rotRMem[currentPlayerHandle]=False
@@ -618,9 +618,9 @@ try:
                             if lockTime[currentPlayerHandle]==0:
                                 for x in range(5):
                                     for y in range(5):
-                                        if pieceTilemaps[pieceID[currentPlayerHandle]][pieceR[currentPlayerHandle]][y][x]is not None:
+                                        if PieceTilemaps[pieceID[currentPlayerHandle]][pieceR[currentPlayerHandle]][y][x]is not None:
                                             if gameBoard[currentPlayerHandle][pieceY[currentPlayerHandle]+y][pieceX[currentPlayerHandle]+x]is None:
-                                                gameBoard[currentPlayerHandle][pieceY[currentPlayerHandle]+y][pieceX[currentPlayerHandle]+x]=pieceTilemaps[pieceID[currentPlayerHandle]][pieceR[currentPlayerHandle]][y][x]
+                                                gameBoard[currentPlayerHandle][pieceY[currentPlayerHandle]+y][pieceX[currentPlayerHandle]+x]=PieceTilemaps[pieceID[currentPlayerHandle]][pieceR[currentPlayerHandle]][y][x]
                                             else:
                                                 toppedOut[currentPlayerHandle]=True
                                 linesCleared=0
@@ -645,7 +645,7 @@ try:
                                         garbage[currentPlayerHandle]-=1
                                 else:
                                     combo[currentPlayerHandle]+=1
-                                    remainingAttack=lineClearValues[1][linesCleared]+(combo[currentPlayerHandle]-1)//2+9*(gameBoard[currentPlayerHandle]==[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]])
+                                    remainingAttack=LineClearValues[1][linesCleared]+(combo[currentPlayerHandle]-1)//2+9*(gameBoard[currentPlayerHandle]==[[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]])
                                     if garbage[currentPlayerHandle]>0 and garbageBlocking:
                                         while garbage[currentPlayerHandle]>0 and remainingAttack>0:
                                             garbage[currentPlayerHandle]-=1
@@ -737,17 +737,17 @@ try:
                             else:
                                 nextPieces[currentPlayerHandle]+=temp
                             del temp
-                        drawPiece(*playerHoldPositions[vsPlayerCount-2][currentPlayerHandle],hold[currentPlayerHandle])
-                        drawPiece(*playerNextPositions[vsPlayerCount-2][currentPlayerHandle],nextPieces[currentPlayerHandle][0])
-                        drawPiece(playerNextPositions[vsPlayerCount-2][currentPlayerHandle][0],playerNextPositions[vsPlayerCount-2][currentPlayerHandle][1]+32,nextPieces[currentPlayerHandle][1])
-                        drawPiece(playerNextPositions[vsPlayerCount-2][currentPlayerHandle][0],playerNextPositions[vsPlayerCount-2][currentPlayerHandle][1]+64,nextPieces[currentPlayerHandle][2])
-                        drawPiece(playerNextPositions[vsPlayerCount-2][currentPlayerHandle][0],playerNextPositions[vsPlayerCount-2][currentPlayerHandle][1]+96,nextPieces[currentPlayerHandle][3])
-                        drawPiece(playerNextPositions[vsPlayerCount-2][currentPlayerHandle][0],playerNextPositions[vsPlayerCount-2][currentPlayerHandle][1]+128,nextPieces[currentPlayerHandle][4])
+                        drawPiece(*PlayerHoldPositions[vsPlayerCount-2][currentPlayerHandle],hold[currentPlayerHandle])
+                        drawPiece(*PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle],nextPieces[currentPlayerHandle][0])
+                        drawPiece(PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle][0],PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle][1]+32,nextPieces[currentPlayerHandle][1])
+                        drawPiece(PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle][0],PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle][1]+64,nextPieces[currentPlayerHandle][2])
+                        drawPiece(PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle][0],PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle][1]+96,nextPieces[currentPlayerHandle][3])
+                        drawPiece(PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle][0],PlayerNextPositions[vsPlayerCount-2][currentPlayerHandle][1]+128,nextPieces[currentPlayerHandle][4])
                         boardBlits=[]
                         for x in range(10):
                             for y in range(20,40):
                                 if gameBoard[currentPlayerHandle][y][x]is not None:
-                                    boardBlits.append((pieces,(playerBoardPositions[vsPlayerCount-2][currentPlayerHandle][0]+x*8,playerBoardPositions[vsPlayerCount-2][currentPlayerHandle][1]+y*8),(gameBoard[currentPlayerHandle][y][x]//16*8,gameBoard[currentPlayerHandle][y][x]%16*8,8,8)))
+                                    boardBlits.append((pieces,(PlayerBoardPositions[vsPlayerCount-2][currentPlayerHandle][0]+x*8,PlayerBoardPositions[vsPlayerCount-2][currentPlayerHandle][1]+y*8),(gameBoard[currentPlayerHandle][y][x]//16*8,gameBoard[currentPlayerHandle][y][x]%16*8,8,8)))
                         blits(boardBlits)
                         if ghost:
                             prevY=pieceY[currentPlayerHandle]
@@ -755,11 +755,11 @@ try:
                             while not testPieceCollision(currentPlayerHandle):
                                 pieceY[currentPlayerHandle]+=1
                             pieceY[currentPlayerHandle]-=1
-                            drawPiece(playerBoardPositions[vsPlayerCount-2][currentPlayerHandle][0]+8*pieceX[currentPlayerHandle],playerBoardPositions[vsPlayerCount-2][currentPlayerHandle][1]+8*pieceY[currentPlayerHandle],pieceID[currentPlayerHandle],pieceR[currentPlayerHandle],True)
+                            drawPiece(PlayerBoardPositions[vsPlayerCount-2][currentPlayerHandle][0]+8*pieceX[currentPlayerHandle],PlayerBoardPositions[vsPlayerCount-2][currentPlayerHandle][1]+8*pieceY[currentPlayerHandle],pieceID[currentPlayerHandle],pieceR[currentPlayerHandle],True)
                             pieceY[currentPlayerHandle]=prevY
-                        drawPiece(playerBoardPositions[vsPlayerCount-2][currentPlayerHandle][0]+8*pieceX[currentPlayerHandle],playerBoardPositions[vsPlayerCount-2][currentPlayerHandle][1]+8*pieceY[currentPlayerHandle],pieceID[currentPlayerHandle],pieceR[currentPlayerHandle])
+                        drawPiece(PlayerBoardPositions[vsPlayerCount-2][currentPlayerHandle][0]+8*pieceX[currentPlayerHandle],PlayerBoardPositions[vsPlayerCount-2][currentPlayerHandle][1]+8*pieceY[currentPlayerHandle],pieceID[currentPlayerHandle],pieceR[currentPlayerHandle])
                         for i in range(15):
-                            blits([(garbageMeter,(playerGarbageMeterPositions[vsPlayerCount-2][currentPlayerHandle][0],playerGarbageMeterPositions[vsPlayerCount-2][currentPlayerHandle][1]+8*i),((garbage[currentPlayerHandle]+i)//15*2,0,2,8)),])
+                            blits([(garbageMeter,(PlayerGarbageMeterPositions[vsPlayerCount-2][currentPlayerHandle][0],PlayerGarbageMeterPositions[vsPlayerCount-2][currentPlayerHandle][1]+8*i),((garbage[currentPlayerHandle]+i)//15*2,0,2,8)),])
                 if pausePressed:
                     if not pauseMem:
                         gamePaused=not gamePaused
