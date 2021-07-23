@@ -1,22 +1,32 @@
 from copy import deepcopy
+import json
 import math
-import os
 import pygame
 import random
 import sys
-EmptyLine:list=[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1]
 BigBagFull:tuple[int]=(12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)
+EmptyLine:list=[None,None,None,None,None,None,None,None,None,None,-1,-1,-1,-1,-1]
 BlankGameBoard:list[list]=[list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),list(EmptyLine),[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
 MediumBagFull:tuple[int]=(5,6,7,8,9,10,11)
-MediumBagList:list[int]=[5,6,7,8,9,10,11]
 MultiPlayerModes:set[int]={5,7}
+LineClearValues:tuple[tuple[int]]=((0,50,125,375,1500,7500),(0,0,1,2,4,6))
+PieceTilemaps:list[list[list[list]]]=[[[[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,112,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,280,276,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,274,None,None],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,168,172,164,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,162,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,306,None,None],[None,None,313,308,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,314,308,None],[None,None,305,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,312,310,None],[None,None,None,305,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,306,None],[None,None,312,309,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,24,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,34,None,None],[None,None,41,44,36],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,42,36],[None,None,None,35,None],[None,None,None,33,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,40,44,38],[None,None,None,None,33],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,34,None],[None,None,None,35,None],[None,None,40,37,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,50,None],[None,56,60,53,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,50,None,None],[None,None,51,None,None],[None,None,57,52,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,58,60,52,None],[None,49,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,56,54,None,None],[None,None,51,None,None],[None,None,49,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,74,70,None],[None,None,73,69,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,90,84,None],[None,88,85,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,82,None,None],[None,None,89,86,None],[None,None,None,81,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,98,None,None],[None,104,109,100,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,None,107,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,104,110,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,104,103,None,None],[None,None,97,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,120,118,None],[None,None,None,121,116],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,114,None],[None,None,122,117,None],[None,None,113,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,130,None,None],[None,136,141,134,None],[None,None,None,129,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,130,None,None],[None,None,139,132,None],[None,136,133,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,130,None,None,None],[None,137,142,132,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,138,132,None],[None,136,135,None,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,146,None],[None,None,154,157,148],[None,None,145,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,152,150,None],[None,None,None,155,148],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,146],[None,None,152,158,149],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,146,None],[None,None,152,151,None],[None,None,None,153,148],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[24,28,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None]]],[[[None,None,None,None,None],[None,162,None,None,None],[None,169,172,172,164],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,170,164,None],[None,None,163,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,168,172,172,166],[None,None,None,None,161],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,162,None],[None,None,None,163,None],[None,None,None,163,None],[None,None,168,165,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,178],[None,184,188,188,181],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,178,None,None],[None,None,179,None,None],[None,None,179,None,None],[None,None,185,180,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,186,188,188,180],[None,177,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,184,182,None],[None,None,None,179,None],[None,None,None,179,None],[None,None,None,177,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,232,230,None,None],[None,None,233,236,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,234,229,None],[None,None,227,None,None],[None,None,225,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,232,236,230,None],[None,None,None,233,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,None,227,None],[None,None,234,229,None],[None,None,225,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,250,244],[None,248,252,245,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,243,None,None],[None,None,249,246,None],[None,None,None,241,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,250,252,244],[None,248,245,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,249,246,None],[None,None,None,243,None],[None,None,None,241,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,218,214,None],[None,None,217,221,212],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,218,214],[None,None,None,219,213],[None,None,None,209,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,216,222,214],[None,None,None,217,213],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,210,None],[None,None,218,215,None],[None,None,217,213,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,202,198,None],[None,200,205,197,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,194,None,None],[None,None,203,198,None],[None,None,201,197,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,202,206,196,None],[None,201,197,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,202,198,None,None],[None,201,199,None,None],[None,None,193,None,None],[None,None,None,None,None]]],[[[None,34,None,None,None],[None,41,44,38,None],[None,None,None,33,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,42,36,None],[None,None,35,None,None],[None,40,37,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,258,None,None],[None,None,259,None,None],[None,264,269,260,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,258,None,None,None],[None,267,268,260,None],[None,257,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,264,270,260,None],[None,None,259,None,None],[None,None,257,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,258,None],[None,264,268,263,None],[None,None,None,257,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,2,None,2,None],[None,9,12,5,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,10,4,None],[None,None,3,None,None],[None,None,9,4,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,10,12,6,None],[None,1,None,1,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,8,6,None,None],[None,None,3,None,None],[None,8,5,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,3,None,None,None],[None,9,12,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,10,12,4,None],[None,3,None,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,12,6,None],[None,None,None,3,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,None,3,None],[None,8,12,5,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,9,6,None,None],[None,None,9,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,10,4,None],[None,10,5,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,6,None,None],[None,None,9,6,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,10,5,None],[None,8,5,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,98,None,None],[None,104,111,100,None],[None,None,97,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,274,None],[None,280,284,285,276],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,274,None,None],[None,None,275,None,None],[None,None,283,276,None],[None,None,273,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,280,286,284,276],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,274,None],[None,None,280,279,None],[None,None,None,275,None],[None,None,None,273,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,290,None,None],[None,296,301,300,292],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,290,None,None],[None,None,299,292,None],[None,None,291,None,None],[None,None,289,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,296,300,302,292],[None,None,None,289,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,290,None],[None,None,None,291,None],[None,None,296,295,None],[None,None,None,289,None],[None,None,None,None,None]]],[[[None,None,None,None,50],[None,None,58,60,53],[None,None,49,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,56,54,None],[None,None,None,51,None],[None,None,None,57,52],[None,None,None,None,None],[None,None,None,None,None]]]]
+PlayerBoardPositions:tuple[tuple[tuple[int,int]]]=(((152,-72),(408,-72)),((72,-72),(280,-72),(488,-72)),((152,-152),(408,-152),(152,32),(408,32)),((72,-152),(280,-152),(488,-152),(152,32),(408,32)),((72,-152),(280,-152),(488,-152),(72,32),(280,32),(488,32)))
+PlayerGarbageMeterPositions:tuple[tuple[tuple[int,int]]]=(((148,128),(404,128)),((68,128),(276,128),(484,128)),((148,48),(404,48),(148,232),(404,232)),((68,48),(276,48),(484,48),(148,232),(404,232)),((68,48),(276,48),(484,48),(68,232),(276,232),(484,232)))
+PlayerHoldPositions:tuple[tuple[tuple[int,int]]]=(((104,96),(360,96)),((24,96),(232,96),(440,96)),((104,16),(360,16),(104,200),(360,200)),((24,16),(232,16),(440,16),(104,200),(360,200)),((24,16),(232,16),(440,16),(24,200),(232,200),(440,200)))
+PlayerNextPositions:tuple[tuple[tuple[int,int]]]=(((240,96),(496,96)),((160,96),(368,96),(576,96)),((240,16),(496,16),(240,200),(496,200)),((160,16),(368,16),(576,16),(240,200),(496,200)),((160,16),(368,16),(576,16),(160,200),(368,200),(576,200)))
 SinglePlayerModes:set[int]={1,2,3,4,6}
 Resolutions:tuple[tuple[int,int]]=((640,360),(1280,720),(1920,1080),(2560,1440),(3840,2160))
 Root35:float=math.sqrt(35)
 PiOverRoot35:float=math.pi/Root35
-LevelScoreMultipliers:tuple[int]=tuple([(29*(math.sin(PiOverRoot35*math.sqrt(i))/math.pi-math.sqrt(i)*math.cos(PiOverRoot35*math.sqrt(i))/Root35)+1)for i in range(36)])
-del Root35
+LevelScoreMultipliers:tuple[float]=tuple([(29*(math.sin(PiOverRoot35*math.sqrt(i))/math.pi-math.sqrt(i)*math.cos(PiOverRoot35*math.sqrt(i))/Root35)+1)for i in range(36)])
+Root6Over3:float=math.sqrt(6)/3#sqrt(6)/3=1.5**(-1/2)
+LevelSpeeds:tuple[float]=tuple([(Root6Over3**i*57.6650390625)for i in range(36)])#57.6650390625=1.5**10
+VersionID:int=5
+WallKickData:tuple[tuple[int]]=((0,1),(-1,0),(1,0),(-1,1),(1,1),(0,-1),(1,-1),(1,-1),(0,0))
 del PiOverRoot35
+del Root35
+del Root6Over3
 SmallBagFull:tuple[int]=(1,2,3,4)
 def blits(blit_sequence:list[tuple[pygame.Surface,tuple[int,int],tuple[int,int,int,int]]])->None:
     global win
@@ -35,7 +45,7 @@ def drawPiece(x:int,y:int,pieceID:int,pieceR:int=0,ghost:bool=False)->None:
     blitdata=[]
     for x2 in range(5):
         for y2 in range(5):
-            if PieceTilemaps[pieceID][pieceR][y2][x2]is not None:
+            if PieceTilemaps[pieceID][pieceR][y2][x2]is not None and y+y2*8>=0:
                 blitdata.append((ghosts if ghost else pieces,(x+x2*8,y+y2*8),(PieceTilemaps[pieceID][pieceR][y2][x2]//16*8,PieceTilemaps[pieceID][pieceR][y2][x2]%16*8,8,8)))
     blits(blitdata)
 def testPieceCollision(player=None)->bool:
@@ -49,68 +59,89 @@ def updateAssets()->None:
     global garbageMeter
     global ghosts
     global pieces
+    global playerBoardMasks
     global scaleFactor
     global specialChars
     global win
-    win=pygame.display.set_mode(resolution,(pygame.FULLSCREEN if fullscreen else 0))
-    scaleFactor=resolution[1]//180
-    pieces=asset("Pieces")
     if smallMode:
         garbageMeter=asset("Garbage Meter")
     else:
         specialChars=asset("Special Characters")
         font=asset("Font")
     ghosts=asset("Ghosts")
-def updateSettings()->None:
-    global user
-    global settingsSTR
-    global playerBoardMasks
-    user.seek(0)
-    user.truncate()
-    user.write(str(minLvl)+"\n"+str(maxLvl)+"\n"+str(int(ghost))+"\n"+str(dasInit)+"\n"+str(dasSpeed)+"\n"+str(controlSetting)+"\n"+str(Resolutions.index(resolution))+"\n"+str(int(fullscreen))+"\n"+str(int(garbageType))+"\n"+str(int(garbageBlocking))+"\n"+str(int(samePieces))+"\n"+str(int(newBags)))
-    settingsSTR=str(minLvl)+"\n"+str(maxLvl)+"\n"+str(dasInit)+"\n"+str(dasSpeed)+"\n"+str(int(newBags))
+    pieces=asset("Pieces")
+    scaleFactor=resolution[1]//180
     playerBoardMasks=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(16*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
+    win=pygame.display.set_mode(resolution,(pygame.FULLSCREEN if settings["fullscreen"]else 0))
 try:
-    with open("user.ini","x")as x:
+    with open("settings.json","x")as x:
         pass
 except OSError:
     pass
-else:
-    with open("user.ini","w")as x:
-        x.write("0\n20\n1\n12\n2\n0\n0\n0\n1\n1\n0\n1")
+settingsFile=open("settings.json","r+")
 try:
-    with open("boards","x")as x:
+    settings:dict={"controlSetting":0,"dasInit":12,"dasSpeed":2,"fullscreen":False,"garbageBlocking":True,"garbageType":1,"ghost":True,"maxLvl":20,"minLvl":0,"newBags":True,"resolutionSetting":0,"samePieces":False}|json.load(settingsFile)
+except json.JSONDecodeError:
+    settings:dict={"controlSetting":0,"dasInit":12,"dasSpeed":2,"fullscreen":False,"garbageBlocking":True,"garbageType":1,"ghost":True,"maxLvl":20,"minLvl":0,"newBags":True,"resolutionSetting":0,"samePieces":False}
+if type(settings)!=dict:
+    settings={"controlSetting":0,"dasInit":12,"dasSpeed":2,"fullscreen":False,"garbageBlocking":True,"garbageType":1,"ghost":True,"maxLvl":20,"minLvl":0,"newBags":True,"resolutionSetting":0,"samePieces":False}
+if not(type(settings["controlSetting"])==int and 0<=settings["controlSetting"]<=5):
+    settings["controlSetting"]=0
+if type(settings["dasInit"])!=int or settings["dasInit"]<1:
+    settings["dasInit"]=12
+if type(settings["dasSpeed"])!=int or settings["dasSpeed"]<1:
+    settings["dasSpeed"]=2
+if type(settings["fullscreen"])!=bool:
+    settings["fullscreen"]=False
+if type(settings["garbageBlocking"])!=bool:
+    settings["garbageBlocking"]=True
+if not(type(settings["garbageType"])==int and 0<=settings["garbageType"]<=2):
+    settings["garbageType"]=1
+if type(settings["ghost"])!=bool:
+    settings["ghost"]=True
+if not(type(settings["maxLvl"])==int and 0<=settings["maxLvl"]<=35):
+    settings["maxLvl"]=20
+if not(type(settings["minLvl"])==int and 0<=settings["minLvl"]<=35):
+    settings["minLvl"]=0
+if settings["minLvl"]>settings["maxLvl"]:
+    settings["maxLvl"]=20
+    settings["minLvl"]=0
+if type(settings["newBags"])!=bool:
+    settings["newBags"]=True
+if not(type(settings["resolutionSetting"])==int and 0<=settings["resolutionSetting"]<=4):
+    settings["resolutionSetting"]=0
+if type(settings["samePieces"])!=bool:
+    settings["samePieces"]=False
+resolution:tuple[int,int]=Resolutions[settings["resolutionSetting"]]
+try:
+    with open("leaderboard"+str(VersionID)+".json","x")as x:
         pass
 except OSError:
     pass
-user=open("user.ini","r+")
-lines:list[str]=user.readlines()
-x:list[str]=list(map(lambda y:y[:-1],lines))[:-1]+[lines[-1],]
-del lines
-minLvl:int=int(x[0])
-maxLvl:int=int(x[1])
-ghost:bool=bool(int(x[2]))
-dasInit:int=int(x[3])
-dasSpeed:int=int(x[4])
-settingsSTR:str=x[0]+"\n"+x[1]+"\n"+x[3]+"\n"+x[4]+"\n"+x[11]
-controlSetting:int=int(x[5])
-resolution:tuple[int,int]=Resolutions[int(x[6])]
-fullscreen:bool=bool(int(x[7]))
-garbageType:int=int(x[8])
-garbageBlocking:bool=bool(int(x[9]))
-samePieces:bool=bool(int(x[10]))
-newBags:bool=bool(int(x[11]))
-del x
-boards=open("boards")
-lines=boards.readlines()
-x:list[str]=[]if lines==[]else list(map(lambda y:y[:-1],lines))[:-1]+[lines[-1],]
-del lines
-leaderboards=[]
-for i in range(0,len(x)-1,8):
-    leaderboards.append([int(x[i]),int(x[i+1]),x[i+2],x[i+3:i+7],int(x[i+7])])
-del x
-boards.close()
-boards=open("boards","a")
+leaderboardFile=open("leaderboard"+str(VersionID)+".json","r+")
+try:
+    leaderboard:list[dict]=json.load(leaderboardFile)
+except json.JSONDecodeError:
+    leaderboard:list[dict]=[]
+if type(leaderboard)!=list:
+    leaderboard=[]
+for gameID in range(len(leaderboard)):
+    if type(leaderboard[gameID])!=dict or not{"mode","name","settings","score"}.issubset(set(leaderboard[gameID].keys()))or type(leaderboard[gameID]["mode"])!=int or leaderboard[gameID]["mode"]not in SinglePlayerModes or(leaderboard[gameID]["mode"]in{3,4,6}and("lines"not in leaderboard[gameID].keys()or type(leaderboard[gameID]["lines"])!=int or leaderboard[gameID]["lines"]<0))or type(leaderboard[gameID]["name"])!=str or len(leaderboard[gameID]["name"])!=6 or type(leaderboard[gameID]["score"])!=int or leaderboard[gameID]["score"]<0 or type(leaderboard[gameID]["settings"])!=dict or not{"dasInit","dasSpeed","maxLvl","minLvl"}.issubset(leaderboard[gameID]["settings"].keys())or type(leaderboard[gameID]["settings"]["dasInit"])!=int or leaderboard[gameID]["settings"]["dasInit"]<1 or type(leaderboard[gameID]["settings"]["dasSpeed"])!=int or leaderboard[gameID]["settings"]["dasSpeed"]<1 or type(leaderboard[gameID]["settings"]["maxLvl"])!=int or type(leaderboard[gameID]["settings"]["minLvl"])!=int or 0>=leaderboard[gameID]["settings"]["minLvl"]>=leaderboard[gameID]["settings"]["maxLvl"]>=35 or("time"in leaderboard[gameID].keys()and leaderboard[gameID]["time"]<0):
+        del leaderboard[gameID]
+    for key in leaderboard[gameID].keys():
+        if key not in{"lines","mode","name","score","settings","time"}:
+            del leaderboard[gameID][key]
+    if leaderboard[gameID]["mode"]in{1,2}and"lines"in leaderboard[gameID].keys():
+        del leaderboard[gameID]["lines"]
+    if leaderboard[gameID]["mode"]in{3,4,6}and"time"in leaderboard[gameID].keys():
+        del leaderboard[gameID]["time"]
+    for key in leaderboard[gameID]["settings"].keys():
+        if key not in{"dasInit","dasSpeed","maxLvl","minLvl"}:
+            del leaderboard[gameID]["settings"][key]
+currentLeaderboardLength:int=0
+for game in leaderboard:
+    if game["mode"]==0:
+        currentLeaderboardLength+=1
 controlOptions:list[dict[str,int]]=[{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_UP,"rotL":pygame.K_z,"rotR":pygame.K_x,"hold":pygame.K_c,"pause":pygame.K_SPACE},{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_UP,"rotL":pygame.K_x,"rotR":pygame.K_z,"hold":pygame.K_c,"pause":pygame.K_SPACE},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_k,"rotR":pygame.K_l,"hold":pygame.K_SEMICOLON,"pause":pygame.K_SPACE},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_l,"rotR":pygame.K_k,"hold":pygame.K_SEMICOLON,"pause":pygame.K_SPACE},{"left":pygame.K_LEFT,"right":pygame.K_RIGHT,"down":pygame.K_DOWN,"up":pygame.K_SPACE,"rotL":pygame.K_z,"rotR":pygame.K_UP,"hold":pygame.K_x,"pause":pygame.K_p},{"left":pygame.K_a,"right":pygame.K_d,"down":pygame.K_s,"up":pygame.K_w,"rotL":pygame.K_q,"rotR":pygame.K_e,"hold":pygame.K_r,"pause":pygame.K_SPACE}]
 smallMode:bool=False
 pygame.init()
@@ -119,26 +150,19 @@ pygame.display.set_icon(pygame.image.load("Assets\\Icon.png"))
 updateAssets()
 pygame.display.set_caption("Master Stacker")
 mode:int=0
-PieceTilemaps:list[list[list[list]]]=[[[[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,112,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,None,280,276,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,274,None,None],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,168,172,164,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,162,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,306,None,None],[None,None,313,308,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,314,308,None],[None,None,305,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,312,310,None],[None,None,None,305,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,306,None],[None,None,312,309,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[None,24,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,34,None,None],[None,None,41,44,36],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,42,36],[None,None,None,35,None],[None,None,None,33,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,40,44,38],[None,None,None,None,33],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,34,None],[None,None,None,35,None],[None,None,40,37,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,50,None],[None,56,60,53,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,50,None,None],[None,None,51,None,None],[None,None,57,52,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,58,60,52,None],[None,49,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,56,54,None,None],[None,None,51,None,None],[None,None,49,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,74,70,None],[None,None,73,69,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,90,84,None],[None,88,85,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,82,None,None],[None,None,89,86,None],[None,None,None,81,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,98,None,None],[None,104,109,100,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,None,107,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,104,110,100,None],[None,None,97,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,98,None,None],[None,104,103,None,None],[None,None,97,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,120,118,None],[None,None,None,121,116],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,114,None],[None,None,122,117,None],[None,None,113,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,130,None,None],[None,136,141,134,None],[None,None,None,129,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,130,None,None],[None,None,139,132,None],[None,136,133,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,130,None,None,None],[None,137,142,132,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,138,132,None],[None,136,135,None,None],[None,None,129,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,146,None],[None,None,154,157,148],[None,None,145,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,152,150,None],[None,None,None,155,148],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,146],[None,None,152,158,149],[None,None,None,145,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,146,None],[None,None,152,151,None],[None,None,None,153,148],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,None],[24,28,28,28,20],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,18,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,19,None,None],[None,None,17,None,None]]],[[[None,None,None,None,None],[None,162,None,None,None],[None,169,172,172,164],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,170,164,None],[None,None,163,None,None],[None,None,163,None,None],[None,None,161,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,168,172,172,166],[None,None,None,None,161],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,162,None],[None,None,None,163,None],[None,None,None,163,None],[None,None,168,165,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,None,178],[None,184,188,188,181],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,178,None,None],[None,None,179,None,None],[None,None,179,None,None],[None,None,185,180,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,186,188,188,180],[None,177,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,184,182,None],[None,None,None,179,None],[None,None,None,179,None],[None,None,None,177,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,232,230,None,None],[None,None,233,236,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,234,229,None],[None,None,227,None,None],[None,None,225,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,232,236,230,None],[None,None,None,233,228],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,226,None],[None,None,None,227,None],[None,None,234,229,None],[None,None,225,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,250,244],[None,248,252,245,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,243,None,None],[None,None,249,246,None],[None,None,None,241,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,250,252,244],[None,248,245,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,242,None,None],[None,None,249,246,None],[None,None,None,243,None],[None,None,None,241,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,218,214,None],[None,None,217,221,212],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,218,214],[None,None,None,219,213],[None,None,None,209,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,None,216,222,214],[None,None,None,217,213],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,210,None],[None,None,218,215,None],[None,None,217,213,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,202,198,None],[None,200,205,197,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,194,None,None],[None,None,203,198,None],[None,None,201,197,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,202,206,196,None],[None,201,197,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,202,198,None,None],[None,201,199,None,None],[None,None,193,None,None],[None,None,None,None,None]]],[[[None,34,None,None,None],[None,41,44,38,None],[None,None,None,33,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,42,36,None],[None,None,35,None,None],[None,40,37,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,258,None,None],[None,None,259,None,None],[None,264,269,260,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,258,None,None,None],[None,267,268,260,None],[None,257,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,264,270,260,None],[None,None,259,None,None],[None,None,257,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,258,None],[None,264,268,263,None],[None,None,None,257,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,2,None,2,None],[None,9,12,5,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,10,4,None],[None,None,3,None,None],[None,None,9,4,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,None,None,None,None],[None,10,12,6,None],[None,1,None,1,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,8,6,None,None],[None,None,3,None,None],[None,8,5,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,3,None,None,None],[None,9,12,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,10,12,4,None],[None,3,None,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,12,6,None],[None,None,None,3,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,None,3,None],[None,8,12,5,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,2,None,None,None],[None,9,6,None,None],[None,None,9,4,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,10,4,None],[None,10,5,None,None],[None,1,None,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,8,6,None,None],[None,None,9,6,None],[None,None,None,1,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,2,None],[None,None,10,5,None],[None,8,5,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,98,None,None],[None,104,111,100,None],[None,None,97,None,None],[None,None,None,None,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,None,274,None],[None,280,284,285,276],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,274,None,None],[None,None,275,None,None],[None,None,283,276,None],[None,None,273,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,280,286,284,276],[None,None,273,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,274,None],[None,None,280,279,None],[None,None,None,275,None],[None,None,None,273,None],[None,None,None,None,None]]],[[[None,None,None,None,None],[None,None,290,None,None],[None,296,301,300,292],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,290,None,None],[None,None,299,292,None],[None,None,291,None,None],[None,None,289,None,None],[None,None,None,None,None]],[[None,None,None,None,None],[None,296,300,302,292],[None,None,None,289,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,None,290,None],[None,None,None,291,None],[None,None,296,295,None],[None,None,None,289,None],[None,None,None,None,None]]],[[[None,None,None,None,50],[None,None,58,60,53],[None,None,49,None,None],[None,None,None,None,None],[None,None,None,None,None]],[[None,None,56,54,None],[None,None,None,51,None],[None,None,None,57,52],[None,None,None,None,None],[None,None,None,None,None]]]]
 name:str="      "
 time:int=-1
 gameWin=False
-LineClearValues:tuple[tuple[int]]=((0,50,125,375,1500,7500),(0,0,1,2,4,6,9))
 combo=0
 fpsManager=pygame.time.Clock()
 currentBackground:pygame.Surface=asset("Backgrounds\\Menu\\1")
-WallKickData:tuple[tuple[int]]=((0,1),(-1,0),(1,0),(-1,1),(1,1),(0,-1),(1,-1),(1,-1),(0,0))
 gamePaused:bool=False
 menuPage:int=1
-leaderboardScrollPosition=0
+leaderboardScrollPosition:int=0
 vsPlayerCount:int=2
 nameEntryPos:int=0
 handlePlayer:int=0
 playerBoardMasks:list[list[pygame.Rect]]=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(16*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
-PlayerHoldPositions:tuple[tuple[tuple[int,int]]]=(((104,96),(360,96)),((24,96),(232,96),(440,96)),((104,16),(360,16),(104,200),(360,200)),((24,16),(232,16),(440,16),(104,200),(360,200)),((24,16),(232,16),(440,16),(24,200),(232,200),(440,200)))
-PlayerNextPositions:tuple[tuple[tuple[int,int]]]=(((240,96),(496,96)),((160,96),(368,96),(576,96)),((240,16),(496,16),(240,200),(496,200)),((160,16),(368,16),(576,16),(240,200),(496,200)),((160,16),(368,16),(576,16),(160,200),(368,200),(576,200)))
-PlayerBoardPositions:tuple[tuple[tuple[int,int]]]=(((152,-72),(408,-72)),((72,-72),(280,-72),(488,-72)),((152,-152),(408,-152),(152,32),(408,32)),((72,-152),(280,-152),(488,-152),(152,32),(408,32)),((72,-152),(280,-152),(488,-152),(72,32),(280,32),(488,32)))
-PlayerGarbageMeterPositions:tuple[tuple[tuple[int,int]]]=(((148,128),(404,128)),((68,128),(276,128),(484,128)),((148,48),(404,48),(148,232),(404,232)),((68,48),(276,48),(484,48),(148,232),(404,232)),((68,48),(276,48),(484,48),(68,232),(276,232),(484,232)))
 garbage:list[int]=[]
 remainingAttack:int=0
 try:
@@ -159,20 +183,19 @@ try:
                 holdPressed[2]=True
             pausePressed=keyboardInputs[pygame.K_SPACE]
         else:
-            leftPressed=keyboardInputs[controlOptions[controlSetting]["left"]]
-            rightPressed=keyboardInputs[controlOptions[controlSetting]["right"]]
-            downPressed=keyboardInputs[controlOptions[controlSetting]["down"]]
-            upPressed=keyboardInputs[controlOptions[controlSetting]["up"]]
-            rotLPressed=keyboardInputs[controlOptions[controlSetting]["rotL"]]
-            rotRPressed=keyboardInputs[controlOptions[controlSetting]["rotR"]]
-            holdPressed=keyboardInputs[controlOptions[controlSetting]["hold"]]
-            pausePressed=keyboardInputs[controlOptions[controlSetting]["pause"]]
+            leftPressed=keyboardInputs[controlOptions[settings["controlSetting"]]["left"]]
+            rightPressed=keyboardInputs[controlOptions[settings["controlSetting"]]["right"]]
+            downPressed=keyboardInputs[controlOptions[settings["controlSetting"]]["down"]]
+            upPressed=keyboardInputs[controlOptions[settings["controlSetting"]]["up"]]
+            rotLPressed=keyboardInputs[controlOptions[settings["controlSetting"]]["rotL"]]
+            rotRPressed=keyboardInputs[controlOptions[settings["controlSetting"]]["rotR"]]
+            holdPressed=keyboardInputs[controlOptions[settings["controlSetting"]]["hold"]]
+            pausePressed=keyboardInputs[controlOptions[settings["controlSetting"]]["pause"]]
         if mode in SinglePlayerModes:
             if time==-1:
                 currentBackground=asset("Backgrounds\\Polymino Game"if mode==6 else"Backgrounds\\Standard Game")
-                print(BlankGameBoard)
                 gameBoard=deepcopy(BlankGameBoard)
-                if mode==6 and newBags:
+                if mode==6 and settings["newBags"]:
                     smallBag=set(SmallBagFull)
                     mediumBag=set(MediumBagFull)
                     bigBag=set(BigBagFull)
@@ -183,7 +206,7 @@ try:
                         nextPieces.append(mediumBag.pop())
                         nextPieces.append(bigBag.pop())
                 else:
-                    nextPieces=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagList)
+                    nextPieces=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagFull)
                 random.shuffle(nextPieces)
                 pieceID=nextPieces[0]
                 del nextPieces[0]
@@ -191,8 +214,8 @@ try:
                 pieceY=17
                 pieceR=0
                 lines=0
-                level=minLvl
-                fallTime=1.5**(-level/2+10)
+                level=settings["minLvl"]
+                fallTime=LevelSpeeds[level]
                 lockTime=60
                 pieceLowestY=17
                 score=0
@@ -221,7 +244,7 @@ try:
                         if testPieceCollision():
                             pieceX+=1
                         else:
-                            dasTimer=-dasInit if dasTimer==0 else -dasSpeed
+                            dasTimer=-(settings["dasInit"]if dasTimer==0 else settings["dasSpeed"])
                     else:
                         dasTimer+=1
                 if rightPressed and not leftPressed:
@@ -231,7 +254,7 @@ try:
                         if testPieceCollision():
                             pieceX-=1
                         else:
-                            dasTimer=dasInit if dasTimer==0 else dasSpeed
+                            dasTimer=settings["dasInit"]if dasTimer==0 else settings["dasSpeed"]
                     else:
                         dasTimer-=1
                 if not(leftPressed or rightPressed):
@@ -294,7 +317,7 @@ try:
                             pieceX=2
                             pieceY=17
                             pieceR=0
-                            fallTime=1.5**(-level/2+10)
+                            fallTime=LevelSpeeds[level]
                             lockTime=60
                             pieceLowestY=17
                             holdUsed=True
@@ -330,16 +353,16 @@ try:
                         else:
                             combo+=1
                             score+=int(LineClearValues[0][linesCleared]*(0.95+0.05*combo)*LevelScoreMultipliers[level])
-                            if gameBoard==deepcopy(BlankGameBoard):
+                            if gameBoard==BlankGameBoard:
                                 score+=int(45000*(0.95+0.05*combo)*LevelScoreMultipliers[level])
-                            if maxLvl>lines//10>level:
+                            if settings["maxLvl"]>lines//10>level:
                                 level+=1
                         pieceID=nextPieces[0]
                         del nextPieces[0]
                         pieceX=2
                         pieceY=17
                         pieceR=0
-                        fallTime=1.5**(-level/2+10)
+                        fallTime=LevelSpeeds[level]
                         lockTime=60
                         pieceLowestY=17
                         holdUsed=0
@@ -349,7 +372,7 @@ try:
                     if downPressed:
                         fallTime=min(fallTime,2)
                     while fallTime<=0:
-                        fallTime+=1.5**(-level/2+10)
+                        fallTime+=LevelSpeeds[level]
                         pieceY+=1
                         if pieceY>pieceLowestY:
                             pieceLowestY=pieceY
@@ -357,13 +380,13 @@ try:
                         if downPressed or level>16:
                             score+=1
                         if testPieceCollision():
-                            fallTime-=1.5**(-level/2+10)
+                            fallTime-=LevelSpeeds[level]
                             pieceY-=1
                             if downPressed or level>16:
                                 score-=1
                             break
                 if len(nextPieces)<5:
-                    if mode==6 and newBags:
+                    if mode==6 and settings["newBags"]:
                         temp=[]
                         for i in range(4):
                             if i<2:
@@ -390,7 +413,7 @@ try:
                                     break
                         del temp2
                     else:
-                        temp=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagList)
+                        temp=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagFull)
                     random.shuffle(temp)
                     nextPieces+=temp
                     del temp
@@ -406,7 +429,7 @@ try:
                         if gameBoard[y][x]is not None:
                             boardBlits.append((pieces,(120+x*8,-152+y*8),(gameBoard[y][x]//16*8,gameBoard[y][x]%16*8,8,8)))
                 blits(boardBlits)
-                if ghost:
+                if settings["ghost"]:
                     prevY=pieceY
                     pieceY+=1
                     while not testPieceCollision():
@@ -425,7 +448,7 @@ try:
             else:
                 pauseMem=False
             drawText(" {:02}".format(level),(80,80))
-            drawText(("  "+str(lines)if lines<100 else(" "+str(lines)if lines<10000 else(str(lines)if lines<100000 else("#"+str(lines%10000)if lines<110000 else("##"+str(lines%1000)if lines<111000 else("###"+str(lines%100)if lines<111100 else("####"+str(lines%10)if lines<111110 else"#####"))))))),(72,56),{'#':0})
+            drawText((" {:03}".format(lines)if lines<1000 else(str(lines)if lines<100000 else("#"+str(lines%10000)if lines<110000 else("##"+str(lines%1000)if lines<111000 else("###"+str(lines%100)if lines<111100 else("####"+str(lines%10)if lines<111110 else"#####")))))),(72,56),{'#':0})
             drawText(("{:07}".format(score)if score<10000000 else("#{:06}".format(score%1000000)if score<11000000 else("##{:05}".format(score%100000)if score<11100000 else("###{:04}".format(score%10000)if score<11110000 else("####{:03}".format(score%1000)if score<11111000 else("#####{:02}".format(score%100)if score<11111100 else("######{}".format(score%10)if score<11111110 else"#######"))))))),(57,104),{'#':0})
             drawText(name,(64,152))
             drawText("{:02}'{:02}\"{:02}".format(time//3600,time//60%60,time%60)if time<359999 else"99'59\"59",(48,128))
@@ -433,14 +456,8 @@ try:
                 toppedOut=True
                 gameWin=True
             if toppedOut:
-                boards.write(str(mode)+"\n"+str(score)+"\n"+name+"\n"+(settingsSTR if mode==6 else settingsSTR.rsplit("\n",1)[0])+"\n0\n")
-                leaderboards.append([mode,score,name,settingsSTR.split("\n")[:(5 if mode==6 else 4)],0])
-                if mode in{3,4,6}:
-                    boards.write(str(mode)+"\n"+str(lines)+"\n"+name+"\n"+(settingsSTR if mode==6 else settingsSTR.rsplit("\n",1)[0])+"\n2\n")
-                    leaderboards.append([mode,lines,name,settingsSTR.split("\n")[:(5 if mode==6 else 4)],2])
-                elif gameWin:
-                    boards.write(str(mode)+"\n"+str(time)+"\n"+name+"\n"+settingsSTR.rsplit("\n",1)[0]+"\n1\n")
-                    leaderboards.append([mode,score,time,settingsSTR.split("\n")[:4],1])
+                leaderboard.append({"mode":mode,"name":name,"settings":{"dasInit":settings["dasInit"],"dasSpeed":settings["dasSpeed"],"maxLvl":settings["maxLvl"],"minLvl":settings["minLvl"]},"score":score}|({"lines":lines}if mode in{3,4,6}else({"time":time}if gameWin else{})))
+                currentLeaderboardLength+=1
                 currentBackground=asset("Backgrounds\\Menu\\"+str(mode))
                 mode=0
                 updateBackground()
@@ -451,8 +468,8 @@ try:
                 gameBoard=[deepcopy(BlankGameBoard) for i in range(vsPlayerCount)]
                 nextPieces=[[]for i in range(vsPlayerCount)]
                 pieceID=[None,]*vsPlayerCount
-                if samePieces:
-                    if mode==7 and newBags:
+                if settings["samePieces"]:
+                    if mode==7 and settings["newBags"]:
                         smallBag=set(SmallBagFull)
                         mediumBag=set(MediumBagFull)
                         bigBag=set(BigBagFull)
@@ -463,14 +480,14 @@ try:
                             x.append(mediumBag.pop())
                             x.append(bigBag.pop())
                     else:
-                        x=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==7 else list(MediumBagList)
+                        x=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==7 else list(MediumBagFull)
                     random.shuffle(x)
-                elif mode==7 and newBags:
+                elif mode==7 and settings["newBags"]:
                     smallBag=[set(),]*vsPlayerCount
                     mediumBag=[set(),]*vsPlayerCount
                     bigBag=[set(),]*vsPlayerCount
                 for i in range(vsPlayerCount):
-                    if mode==7 and not samePieces and newBags:
+                    if mode==7 and not settings["samePieces"]and settings["newBags"]:
                         smallBag[i]=set(SmallBagFull)
                         mediumBag[i]=set(MediumBagFull)
                         bigBag[i]=set(BigBagFull)
@@ -481,8 +498,8 @@ try:
                             nextPieces[i].append(mediumBag[i].pop())
                             nextPieces[i].append(bigBag[i].pop())
                     else:
-                        nextPieces[i]=list(x)if samePieces else random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==7 else list(MediumBagList)
-                    if not samePieces:
+                        nextPieces[i]=list(x)if settings["samePieces"]else random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==7 else list(MediumBagFull)
+                    if not settings["samePieces"]:
                         random.shuffle(nextPieces[i])
                     pieceID[i]=nextPieces[i][0]
                     del nextPieces[i][0]
@@ -493,7 +510,7 @@ try:
                 pieceX=[2,]*vsPlayerCount
                 pieceY=[17,]*vsPlayerCount
                 pieceR=[0,]*vsPlayerCount
-                fallTime=[59049/1024,]*vsPlayerCount
+                fallTime=[LevelSpeeds[0],]*vsPlayerCount
                 lockTime=[60,]*vsPlayerCount
                 pieceLowestY=[17,]*vsPlayerCount
                 hold=[0,]*vsPlayerCount
@@ -526,7 +543,7 @@ try:
                                 if testPieceCollision(currentPlayerHandle):
                                     pieceX[currentPlayerHandle]+=1
                                 else:
-                                    dasTimer[currentPlayerHandle]=-dasInit if dasTimer[currentPlayerHandle]==0 else -dasSpeed
+                                    dasTimer[currentPlayerHandle]=-(settings["dasInit"]if dasTimer[currentPlayerHandle]==0 else settings["dasSpeed"])
                             else:
                                 dasTimer[currentPlayerHandle]+=1
                         if rightPressed[currentPlayerHandle]and not leftPressed[currentPlayerHandle]:
@@ -536,7 +553,7 @@ try:
                                 if testPieceCollision(currentPlayerHandle):
                                     pieceX[currentPlayerHandle]-=1
                                 else:
-                                    dasTimer[currentPlayerHandle]=dasInit if dasTimer[currentPlayerHandle]==0 else dasSpeed
+                                    dasTimer[currentPlayerHandle]=settings["dasInit"]if dasTimer[currentPlayerHandle]==0 else settings["dasSpeed"]
                             else:
                                 dasTimer[currentPlayerHandle]-=1
                         if not(leftPressed[currentPlayerHandle]or rightPressed[currentPlayerHandle]):
@@ -596,7 +613,7 @@ try:
                                     pieceX[currentPlayerHandle]=2
                                     pieceY[currentPlayerHandle]=17
                                     pieceR[currentPlayerHandle]=0
-                                    fallTime[currentPlayerHandle]=1.5**(-level/2+10)
+                                    fallTime[currentPlayerHandle]=LevelSpeeds[0]
                                     lockTime[currentPlayerHandle]=60
                                     pieceLowestY[currentPlayerHandle]=17
                                     holdUsed[currentPlayerHandle]=True
@@ -637,22 +654,22 @@ try:
                                         garbage[currentPlayerHandle]-=1
                                 else:
                                     combo[currentPlayerHandle]+=1
-                                    remainingAttack=LineClearValues[1][linesCleared]+(combo[currentPlayerHandle]-1)//2+9*(gameBoard[currentPlayerHandle]==deepcopy(BlankGameBoard))
-                                    if garbage[currentPlayerHandle]>0 and garbageBlocking:
+                                    remainingAttack=LineClearValues[1][linesCleared]+(combo[currentPlayerHandle]-1)//2+(9 if mode==7 else 6)*(gameBoard[currentPlayerHandle]==BlankGameBoard)
+                                    if garbage[currentPlayerHandle]>0 and settings["garbageBlocking"]:
                                         while garbage[currentPlayerHandle]>0 and remainingAttack>0:
                                             garbage[currentPlayerHandle]-=1
                                             remainingAttack-=1
-                                    if garbageType==0:
+                                    if settings["garbageType"]==0:
                                         for i in[x for x in range(vsPlayerCount)if x!=currentPlayerHandle and not toppedOut[x]]:
                                             garbage[i]+=remainingAttack
-                                    elif garbageType==1:
+                                    elif settings["garbageType"]==1:
                                         garbage[random.choice([x for x in range(vsPlayerCount)if x!=currentPlayerHandle and not toppedOut[x]])]+=remainingAttack
                                 pieceID[currentPlayerHandle]=nextPieces[currentPlayerHandle][0]
                                 del nextPieces[currentPlayerHandle][0]
                                 pieceX[currentPlayerHandle]=2
                                 pieceY[currentPlayerHandle]=17
                                 pieceR[currentPlayerHandle]=0
-                                fallTime[currentPlayerHandle]=59049/1024
+                                fallTime[currentPlayerHandle]=LevelSpeeds[0]
                                 lockTime[currentPlayerHandle]=60
                                 pieceLowestY[currentPlayerHandle]=17
                                 holdUsed[currentPlayerHandle]=0
@@ -662,14 +679,14 @@ try:
                             if downPressed[currentPlayerHandle]:
                                 fallTime[currentPlayerHandle]=min(fallTime[currentPlayerHandle],2)
                             if fallTime[currentPlayerHandle]<=0:
-                                fallTime[currentPlayerHandle]+=59049/1024
+                                fallTime[currentPlayerHandle]+=LevelSpeeds[0]
                                 pieceY[currentPlayerHandle]+=1
                                 if pieceY[currentPlayerHandle]>pieceLowestY[currentPlayerHandle]:
                                     pieceLowestY[currentPlayerHandle]=pieceY[currentPlayerHandle]
                                     lockTime[currentPlayerHandle]=60
                         if len(nextPieces[currentPlayerHandle])<5:
-                            if mode==7 and newBags:
-                                if samePieces:
+                            if mode==7 and settings["newBags"]:
+                                if settings["samePieces"]:
                                     temp=[]
                                     for i in range(4):
                                         if i<2:
@@ -721,9 +738,9 @@ try:
                                                 temp.append(temp2)
                                                 break
                             else:
-                                temp=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagList)
+                                temp=random.sample(SmallBagFull,2)+random.sample(MediumBagFull,4)+random.sample(BigBagFull,4)if mode==6 else list(MediumBagFull)
                             random.shuffle(temp)
-                            if samePieces:
+                            if settings["samePieces"]:
                                 for i in[x for x in range(vsPlayerCount)if not toppedOut[x]]:
                                     nextPieces[i]+=temp
                             else:
@@ -741,7 +758,7 @@ try:
                                 if gameBoard[currentPlayerHandle][y][x]is not None:
                                     boardBlits.append((pieces,(PlayerBoardPositions[vsPlayerCount-2][currentPlayerHandle][0]+x*8,PlayerBoardPositions[vsPlayerCount-2][currentPlayerHandle][1]+y*8),(gameBoard[currentPlayerHandle][y][x]//16*8,gameBoard[currentPlayerHandle][y][x]%16*8,8,8)))
                         blits(boardBlits)
-                        if ghost:
+                        if settings["ghost"]:
                             prevY=pieceY[currentPlayerHandle]
                             pieceY[currentPlayerHandle]+=1
                             while not testPieceCollision(currentPlayerHandle):
@@ -758,7 +775,7 @@ try:
                         pauseMem=True
                 else:
                     pauseMem=False
-            if toppedOut.count(False)==1:
+            if toppedOut.count(False)<=1:
                 if pausePressed:
                     menuPage=mode
                     gamePaused=False
@@ -783,15 +800,25 @@ try:
                     if menuPage!=-2:
                         menuPage-=1
                         leaderboardScrollPosition=0
+                    if menuPage in SinglePlayerModes:
+                        currentLeaderboardLength=0
+                        for game in leaderboard:
+                            if game["mode"]==menuPage:
+                                currentLeaderboardLength+=1
                     currentBackground=asset("Backgrounds\\Menu\\"+str(menuPage))
                     leftMem=True
             else:
                 leftMem=False
             if rightPressed:
                 if not rightMem:
-                    if menuPage<7:
+                    if menuPage!=7:
                         menuPage+=1
                         leaderboardScrollPosition=0
+                    if menuPage in SinglePlayerModes:
+                        currentLeaderboardLength=0
+                        for game in leaderboard:
+                            if game["mode"]==menuPage:
+                                currentLeaderboardLength+=1
                     currentBackground=asset("Backgrounds\\Menu\\"+str(menuPage))
                     rightMem=True
             else:
@@ -800,14 +827,8 @@ try:
             if downPressed:
                 if not downMem:
                     if menuPage==0:
-                        controlSetting=(controlSetting+1)%6
-                        updateSettings()
-                    if menuPage in SinglePlayerModes:
-                        currentLeaderboardLength=0
-                        for i in leaderboards:
-                            if i[0]==menuPage and i[4]==0:
-                                currentLeaderboardLength+=1
-                        if leaderboardScrollPosition<(currentLeaderboardLength-1)//5:
+                        settings["controlSetting"]=(settings["controlSetting"]+1)%6
+                    if menuPage in SinglePlayerModes and leaderboardScrollPosition<(currentLeaderboardLength-1)//5:
                             leaderboardScrollPosition+=1
                     elif menuPage in MultiPlayerModes and vsPlayerCount<6:
                         vsPlayerCount+=1
@@ -817,8 +838,7 @@ try:
             if upPressed:
                 if not upMem:
                     if menuPage==0:
-                        controlSetting=(controlSetting-1)%6
-                        updateSettings()
+                        settings["controlSetting"]=(settings["controlSetting"]-1)%6
                     elif menuPage in SinglePlayerModes and leaderboardScrollPosition>0:
                         leaderboardScrollPosition-=1
                     elif menuPage in MultiPlayerModes and vsPlayerCount>2:
@@ -846,49 +866,39 @@ try:
                 pauseMem=False
             if menuPage in{1,2}:
                 formattedLeaderboardScoreData=[]
-                for i in leaderboards:
-                    if i[0]==menuPage and i[4]==0:
-                        formattedLeaderboardScoreData.append([i[2],i[1],i[3]==settingsSTR])
-                formattedLeaderboardScoreData.sort(reverse=True,key=lambda x:x[1])
                 formattedLeaderboardTimeData=[]
-                for i in leaderboards:
-                    if i[0]==menuPage and i[4]==1:
-                        formattedLeaderboardTimeData.append([i[2],i[1],i[3]==settingsSTR])
+                for game in leaderboard:
+                    if game["mode"]==menuPage:
+                        formattedLeaderboardScoreData.append([game["name"],game["score"],game["settings"]=={"dasInit":settings["dasInit"],"dasSpeed":settings["dasSpeed"],"maxLvl":settings["maxLvl"],"minLvl":settings["minLvl"]}])
+                        if"time"in game.keys():
+                            formattedLeaderboardTimeData.append([game["name"],game["time"],game["settings"]=={"dasInit":settings["dasInit"],"dasSpeed":settings["dasSpeed"],"maxLvl":settings["maxLvl"],"minLvl":settings["minLvl"]}])
+                formattedLeaderboardScoreData.sort(reverse=True,key=lambda x:x[1])
                 formattedLeaderboardTimeData.sort(key=lambda x:x[1])
                 for i in range(5*leaderboardScrollPosition,5*leaderboardScrollPosition+5):
                     if len(formattedLeaderboardScoreData)>i:
-                        drawText(formattedLeaderboardScoreData[i][0]+(" "if formattedLeaderboardScoreData[i][2]else "!")+("{:07}".format(formattedLeaderboardScoreData[i][1])if formattedLeaderboardScoreData[i][1]<10000000 else("#{:06}".format(formattedLeaderboardScoreData[i][1]%1000000)if formattedLeaderboardScoreData[i][1]<11000000 else("##{:05}".format(formattedLeaderboardScoreData[i][1]%100000)if formattedLeaderboardScoreData[i][1]<11100000 else("###{:04}".format(formattedLeaderboardScoreData[i][1]%10000)if formattedLeaderboardScoreData[i][1]<11110000 else("####{:03}".format(formattedLeaderboardScoreData[i][1]%1000)if formattedLeaderboardScoreData[i][1]<11111000 else("#####{:02}".format(formattedLeaderboardScoreData[i][1]%100)if formattedLeaderboardScoreData[i][1]<11111100 else("######{}".format(formattedLeaderboardScoreData[i][1]%10)if formattedLeaderboardScoreData[i][1]<11111110 else"#######"))))))),(40,128+8*(i-5*leaderboardScrollPosition)),('#',0))
-                    else:
-                        break
-                for i in range(5*leaderboardScrollPosition,5*leaderboardScrollPosition+5):
-                    if len(formattedLeaderboardTimeData)>i:
-                        drawText(formattedLeaderboardTimeData[i][0]+(" "if formattedLeaderboardTimeData[i][2]else "!")+("{:02}'{:02}\"{:02}".format(formattedLeaderboardTimeData[i][1]//3600,formattedLeaderboardTimeData[i][1]//60%60,formattedLeaderboardTimeData[i][1]%60)if formattedLeaderboardTimeData[i][1]<359999 else"99'59\"59"),(224,128+8*(i-5*leaderboardScrollPosition)))
+                        drawText(formattedLeaderboardScoreData[i][0]+(" "if formattedLeaderboardScoreData[i][2]else"!")+("{:07}".format(formattedLeaderboardScoreData[i][1])if formattedLeaderboardScoreData[i][1]<10000000 else("#{:06}".format(formattedLeaderboardScoreData[i][1]%1000000)if formattedLeaderboardScoreData[i][1]<11000000 else("##{:05}".format(formattedLeaderboardScoreData[i][1]%100000)if formattedLeaderboardScoreData[i][1]<11100000 else("###{:04}".format(formattedLeaderboardScoreData[i][1]%10000)if formattedLeaderboardScoreData[i][1]<11110000 else("####{:03}".format(formattedLeaderboardScoreData[i][1]%1000)if formattedLeaderboardScoreData[i][1]<11111000 else("#####{:02}".format(formattedLeaderboardScoreData[i][1]%100)if formattedLeaderboardScoreData[i][1]<11111100 else("######{}".format(formattedLeaderboardScoreData[i][1]%10)if formattedLeaderboardScoreData[i][1]<11111110 else"#######"))))))),(40,128+8*(i-5*leaderboardScrollPosition)),('#',0))
+                        if len(formattedLeaderboardTimeData)>i:
+                            drawText(formattedLeaderboardTimeData[i][0]+(" "if formattedLeaderboardTimeData[i][2]else"!")+("{:02}'{:02}\"{:02}".format(formattedLeaderboardTimeData[i][1]//3600,formattedLeaderboardTimeData[i][1]//60%60,formattedLeaderboardTimeData[i][1]%60)if formattedLeaderboardTimeData[i][1]<359999 else"99'59\"59"),(168,128+8*(i-5*leaderboardScrollPosition)))
                     else:
                         break
             elif menuPage in{3,4,6}:
                 formattedLeaderboardScoreData=[]
-                for i in leaderboards:
-                    if i[0]==menuPage and i[4]==0:
-                        formattedLeaderboardScoreData.append([i[2],i[1],i[3]==settingsSTR.split("\n")])
-                formattedLeaderboardScoreData.sort(reverse=True,key=lambda x:x[1])
                 formattedLeaderboardLinesData=[]
-                for i in leaderboards:
-                    if i[0]==menuPage and i[4]==2:
-                        formattedLeaderboardLinesData.append([i[2],i[1],i[3]==settingsSTR.split("\n")])
+                for game in leaderboard:
+                    if game["mode"]==menuPage:
+                        formattedLeaderboardScoreData.append([game["name"],game["score"],game["settings"]=={"dasInit":settings["dasInit"],"dasSpeed":settings["dasSpeed"],"maxLvl":settings["maxLvl"],"minLvl":settings["minLvl"]}])
+                        formattedLeaderboardLinesData.append([game["name"],game["lines"],game["settings"]=={"dasInit":settings["dasInit"],"dasSpeed":settings["dasSpeed"],"maxLvl":settings["maxLvl"],"minLvl":settings["minLvl"]}])
+                formattedLeaderboardScoreData.sort(reverse=True,key=lambda x:x[1])
                 formattedLeaderboardLinesData.sort(reverse=True,key=lambda x:x[1])
                 for i in range(5*leaderboardScrollPosition,5*leaderboardScrollPosition+5):
                     if len(formattedLeaderboardScoreData)>i:
                         drawText(formattedLeaderboardScoreData[i][0]+(" "if formattedLeaderboardScoreData[i][2]else"!")+("{:07}".format(formattedLeaderboardScoreData[i][1])if formattedLeaderboardScoreData[i][1]<10000000 else("#{:06}".format(formattedLeaderboardScoreData[i][1]%1000000)if formattedLeaderboardScoreData[i][1]<11000000 else("##{:05}".format(formattedLeaderboardScoreData[i][1]%100000)if formattedLeaderboardScoreData[i][1]<11100000 else("###{:04}".format(formattedLeaderboardScoreData[i][1]%10000)if formattedLeaderboardScoreData[i][1]<11110000 else("####{:03}".format(formattedLeaderboardScoreData[i][1]%1000)if formattedLeaderboardScoreData[i][1]<11111000 else("#####{:02}".format(formattedLeaderboardScoreData[i][1]%100)if formattedLeaderboardScoreData[i][1]<11111100 else("######{}".format(formattedLeaderboardScoreData[i][1]%10)if formattedLeaderboardScoreData[i][1]<11111110 else"#######"))))))),(40,128+8*(i-5*leaderboardScrollPosition)),('#',0))
-                    else:
-                        break
-                for i in range(5*leaderboardScrollPosition,5*leaderboardScrollPosition+5):
-                    if len(formattedLeaderboardLinesData)>i:
                         drawText(formattedLeaderboardLinesData[i][0]+(" "if formattedLeaderboardLinesData[i][2]else"!")+"{:05}".format(formattedLeaderboardLinesData[i][1])if formattedLeaderboardLinesData[i][1]<100000 else("#"+str(formattedLeaderboardLinesData[i][1]%10000)if formattedLeaderboardLinesData[i][1]<110000 else("##"+str(formattedLeaderboardLinesData[i][1]%1000)if formattedLeaderboardLinesData[i][1]<111000 else("###"+str(formattedLeaderboardLinesData[i][1]%100)if formattedLeaderboardLinesData[i][1]<111100 else("####"+str(formattedLeaderboardLinesData[i][1]%10)if formattedLeaderboardLinesData[i][1]<111110 else"#####")))),(168,128+8*(i-5*leaderboardScrollPosition)),{'#':0})
                     else:
                         break
             elif menuPage==0:
-                drawText(str(controlSetting),(136,80))
-                blits([(asset("Control Type Diagrams\\"+str(controlSetting)),(80,112),(0,0,176,64)),])
+                drawText(str(settings["controlSetting"]),(136,80))
+                blits([(asset("Control Type Diagrams\\"+str(settings["controlSetting"])),(80,112),(0,0,176,64)),])
             elif menuPage in{7,5}:
                 drawText(str(vsPlayerCount),(128,136))
                 if vsPlayerCount>2:
@@ -902,66 +912,66 @@ try:
                 win.fill(0)
             if leftPressed:
                 if not leftMem:
-                    if menuPage==0 and minLvl>0:
-                        minLvl-=1
-                    elif menuPage==1 and maxLvl>minLvl:
-                        maxLvl-=1
-                    elif menuPage==2 and not ghost:
-                        ghost=True
-                    elif menuPage==3 and dasInit>1:
-                        dasInit-=1
-                    elif menuPage==4 and dasSpeed>1:
-                        dasSpeed-=1
+                    if menuPage==0 and settings["minLvl"]>0:
+                        settings["minLvl"]-=1
+                    elif menuPage==1 and settings["maxLvl"]>settings["minLvl"]:
+                        settings["maxLvl"]-=1
+                    elif menuPage==2 and not settings["ghost"]:
+                        settings["ghost"]=True
+                    elif menuPage==3 and settings["dasInit"]>1:
+                        settings["dasInit"]-=1
+                    elif menuPage==4 and settings["dasSpeed"]>1:
+                        settings["dasSpeed"]-=1
                     elif menuPage==5 and resolution!=(640,360):
                         resolution=Resolutions[Resolutions.index(resolution)-1]
                         updateAssets()
-                    elif menuPage==6 and not fullscreen:
-                        fullscreen=True
+                    elif menuPage==6 and not settings["fullscreen"]:
+                        settings["fullscreen"]=True
                         updateAssets()
-                    elif menuPage==7 and garbageType>0:
-                        garbageType-=1
-                    elif menuPage==8 and not garbageBlocking:
-                        garbageBlocking=True
-                    elif menuPage==9 and not samePieces:
-                        samePieces=True
-                    elif menuPage==10 and not newBags:
-                        newBags=True
+                    elif menuPage==7 and settings["garbageType"]>0:
+                        settings["garbageType"]-=1
+                    elif menuPage==8 and not settings["garbageBlocking"]:
+                        settings["garbageBlocking"]=True
+                    elif menuPage==9 and not settings["samePieces"]:
+                        settings["samePieces"]=True
+                    elif menuPage==10 and not settings["newBags"]:
+                        settings["newBags"]=True
                     leftMem=True
             else:
                 leftMem=False
             if rightPressed:
                 if not rightMem:
-                    if menuPage==0 and minLvl<maxLvl:
-                        minLvl+=1
-                    elif menuPage==1 and maxLvl<35:
-                        maxLvl+=1
-                    elif menuPage==2 and ghost:
-                        ghost=False
+                    if menuPage==0 and settings["minLvl"]<settings["maxLvl"]:
+                        settings["minLvl"]+=1
+                    elif menuPage==1 and settings["maxLvl"]<35:
+                        settings["maxLvl"]+=1
+                    elif menuPage==2 and settings["ghost"]:
+                        settings["ghost"]=False
                     elif menuPage==3:
-                        dasInit+=1
+                        settings["dasInit"]+=1
                     elif menuPage==4:
-                        dasSpeed+=1
+                        settings["dasSpeed"]+=1
                     elif menuPage==5 and resolution!=(3840,2160):
                         resolution=Resolutions[Resolutions.index(resolution)+1]
                         updateAssets()
                         playerBoardMasks=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
-                    elif menuPage==6 and fullscreen:
-                        fullscreen=False
+                    elif menuPage==6 and settings["fullscreen"]:
+                        settings["fullscreen"]=False
                         updateAssets()
-                    elif menuPage==7 and garbageType<2:
-                        garbageType+=1
-                    elif menuPage==8 and garbageBlocking:
-                        garbageBlocking=False
-                    elif menuPage==9 and samePieces:
-                        samePieces=False
-                    elif menuPage==10 and newBags:
-                        newBags=False
+                    elif menuPage==7 and settings["garbageType"]<2:
+                        settings["garbageType"]+=1
+                    elif menuPage==8 and settings["garbageBlocking"]:
+                        settings["garbageBlocking"]=False
+                    elif menuPage==9 and settings["samePieces"]:
+                        settings["samePieces"]=False
+                    elif menuPage==10 and settings["newBags"]:
+                        settings["newBags"]=False
                     rightMem=True
             else:
                 rightMem=False
             if downPressed:
                 if not downMem:
-                    if menuPage==7 and garbageType==2:
+                    if menuPage==7 and settings["garbageType"]==2:
                         menuPage=9
                     elif menuPage<11:
                         menuPage+=1
@@ -970,7 +980,7 @@ try:
                 downMem=False
             if upPressed:
                 if not upMem:
-                    if menuPage==9 and garbageType==2:
+                    if menuPage==9 and settings["garbageType"]==2:
                         menuPage=7
                     elif menuPage>0:
                         menuPage-=1
@@ -980,7 +990,6 @@ try:
             if pausePressed:
                 if not pauseMem:
                     if menuPage==11:
-                        updateSettings()
                         menuPage=-1
                         mode=0
                         currentBackground=asset("Backgrounds\\Menu\\-1")
@@ -988,18 +997,18 @@ try:
                     pauseMem=True
             else:
                 pauseMem=False
-            drawText("(1P) Starting Level:"+("<"if menuPage==0 and minLvl>0 else" ")+"{:02}".format(minLvl)+(">"if menuPage==0 and minLvl<maxLvl else""),(0,0),{"<":1,">":2})
-            drawText("(1P) Maximum Level:"+("<"if menuPage==1 and maxLvl>minLvl else" ")+"{:02}".format(maxLvl)+(">"if menuPage==1 and maxLvl<35 else""),(0,8),{"<":1,">":2})
-            drawText("Ghost:"+("<"if menuPage==2 and not ghost else" ")+("On"if ghost else"Off")+(">"if menuPage==2 and ghost else""),(0,16),{"<":1,">":2})
-            drawText("Initial DAS Delay:"+("<"if menuPage==3 and dasInit>1 else" ")+str(dasInit)+(">"if menuPage==3 else""),(0,24),{"<":1,">":2})
-            drawText("DAS Speed:"+("<"if menuPage==4 and dasSpeed>1 else" ")+str(dasSpeed)+(">"if menuPage==4 else""),(0,32),{"<":1,">":2})
+            drawText("(1P) Starting Level:"+("<"if menuPage==0 and settings["minLvl"]>0 else" ")+"{:02}".format(settings["minLvl"])+(">"if menuPage==0 and settings["minLvl"]<settings["maxLvl"]else""),(0,0),{"<":1,">":2})
+            drawText("(1P) Maximum Level:"+("<"if menuPage==1 and settings["maxLvl"]>settings["minLvl"]else" ")+"{:02}".format(settings["maxLvl"])+(">"if menuPage==1 and settings["maxLvl"]<35 else""),(0,8),{"<":1,">":2})
+            drawText("Ghost:"+("<"if menuPage==2 and not settings["ghost"]else" ")+("On"if settings["ghost"]else"Off")+(">"if menuPage==2 and settings["ghost"]else""),(0,16),{"<":1,">":2})
+            drawText("Initial DAS Delay:"+("<"if menuPage==3 and settings["dasInit"]>1 else" ")+str(settings["dasInit"])+(">"if menuPage==3 else""),(0,24),{"<":1,">":2})
+            drawText("DAS Speed:"+("<"if menuPage==4 and settings["dasSpeed"]>1 else" ")+str(settings["dasSpeed"])+(">"if menuPage==4 else""),(0,32),{"<":1,">":2})
             drawText("Resolution:"+("<"if menuPage==5 and resolution!=(640,360)else" ")+{(640,360):"640\xD7360 (SD)",(1280,720):"1280\xD7720 (HD)",(1920,1080):"1920\xD71080 (FHD)",(2560,1440):"2560\xD71440 (QHD)",(3840,2160):"3840\xD72160 (4K/UHD)"}[resolution]+(">"if menuPage==5 and resolution!=(3840,2160)else""),(0,40),{"<":1,">":2})
-            drawText("Fullscreen:"+("<"if menuPage==6 and not fullscreen else" ")+("On"if fullscreen else"Off")+(">"if menuPage==6 and fullscreen else""),(0,48),{"<":1,">":2})
-            drawText("(VS) Garbage Attacks:"+("<"if menuPage==7 and garbageType>0 else" ")+["All","Random","None"][garbageType]+(">"if menuPage==7 and garbageType<2 else""),(0,56),{"<":1,">":2})
-            if garbageType!=2:
-                drawText("(VS) Garbage Countering:"+("<"if menuPage==8 and not garbageBlocking else" ")+("On"if garbageBlocking else"Off")+(">"if menuPage==8 and garbageBlocking else""),(0,64),{"<":1,">":2})
-            drawText("(VS) All Players Get Same Pieces:"+("<"if menuPage==9 and not samePieces else" ")+("On"if samePieces else"Off")+(">"if menuPage==9 and samePieces else""),(0,72),{"<":1,">":2})
-            drawText("(Polymino) New Bag System:"+("<"if menuPage==10 and not newBags else" ")+("On"if newBags else"Off")+(">"if menuPage==10 and newBags else""),(0,80),{"<":1,">":2})
+            drawText("Fullscreen:"+("<"if menuPage==6 and not settings["fullscreen"]else" ")+("On"if settings["fullscreen"]else"Off")+(">"if menuPage==6 and settings["fullscreen"]else""),(0,48),{"<":1,">":2})
+            drawText("(VS) Garbage Attacks:"+("<"if menuPage==7 and settings["garbageType"]>0 else" ")+["All","Random","None"][settings["garbageType"]]+(">"if menuPage==7 and settings["garbageType"]<2 else""),(0,56),{"<":1,">":2})
+            if settings["garbageType"]!=2:
+                drawText("(VS) Garbage Countering:"+("<"if menuPage==8 and not settings["garbageBlocking"]else" ")+("On"if settings["garbageBlocking"]else"Off")+(">"if menuPage==8 and settings["garbageBlocking"]else""),(0,64),{"<":1,">":2})
+            drawText("(VS) All Players Get Same Pieces:"+("<"if menuPage==9 and not settings["samePieces"]else" ")+("On"if settings["samePieces"]else"Off")+(">"if menuPage==9 and settings["samePieces"]else""),(0,72),{"<":1,">":2})
+            drawText("(Polymino) New Bag System:"+("<"if menuPage==10 and not settings["newBags"]else" ")+("On"if settings["newBags"]else"Off")+(">"if menuPage==10 and settings["newBags"]else""),(0,80),{"<":1,">":2})
             drawText("Back"+("<"if menuPage==11 else""),(0,88),{"<":1})
         elif mode==-2:
             if leftPressed:
@@ -1025,10 +1034,11 @@ try:
                         name[nameEntryPos]=chr(ord(name[nameEntryPos])-1)
                     name="".join(name)
                     if dasTime==0:
-                        dasTime=dasInit*2
+                        dasTime=settings["dasInit"]
                     else:
-                        dasTime=dasSpeed*2
-                dasTime-=1
+                        dasTime=settings["dasSpeed"]
+                else:
+                    dasTime-=1
             if downPressed:
                 if dasTime<2:
                     name=list(name)
@@ -1038,12 +1048,15 @@ try:
                         name[nameEntryPos]=chr(ord(name[nameEntryPos])+1)
                     name="".join(name)
                     if dasTime==0:
-                        dasTime=dasInit*2
+                        dasTime=settings["dasInit"]
                     else:
-                        dasTime=dasSpeed*2
-                dasTime-=1
+                        dasTime=settings["dasSpeed"]
+                else:
+                    dasTime-=1
             if not(upPressed or downPressed):
                 dasTime=0
+            if rotLPressed:
+                mode=0
             if pausePressed:
                 if not pauseMem:
                     mode=menuPage
@@ -1056,9 +1069,16 @@ try:
         pygame.display.update()
         win.fill(0)
         fpsManager.tick(60)
+except KeyboardInterrupt:
+    pass
 finally:
-    user.close()
-    boards.close()
+    leaderboardFile.seek(0)
+    leaderboardFile.truncate()
+    json.dump(leaderboard,leaderboardFile,separators=(",",":"),sort_keys=True)
+    leaderboardFile.close()
+    settingsFile.seek(0)
+    settingsFile.truncate()
+    json.dump(settings,settingsFile,separators=(",",":"),sort_keys=True)
+    settingsFile.close()
     pygame.display.quit()
     pygame.quit()
-    sys.exit()
