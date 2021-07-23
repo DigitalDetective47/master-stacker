@@ -447,7 +447,7 @@ try:
                     pauseMem=True
             else:
                 pauseMem=False
-            drawText(" {:02}".format(level),(80,80))
+            drawText("{:02}".format(level),(88,80))
             drawText((" {:03}".format(lines)if lines<1000 else(str(lines)if lines<100000 else("#"+str(lines%10000)if lines<110000 else("##"+str(lines%1000)if lines<111000 else("###"+str(lines%100)if lines<111100 else("####"+str(lines%10)if lines<111110 else"#####")))))),(72,56),{'#':0})
             drawText(("{:07}".format(score)if score<10000000 else("#{:06}".format(score%1000000)if score<11000000 else("##{:05}".format(score%100000)if score<11100000 else("###{:04}".format(score%10000)if score<11110000 else("####{:03}".format(score%1000)if score<11111000 else("#####{:02}".format(score%100)if score<11111100 else("######{}".format(score%10)if score<11111110 else"#######"))))))),(57,104),{'#':0})
             drawText(name,(64,152))
