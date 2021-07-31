@@ -22,7 +22,7 @@ Root6Over3:float=math.sqrt(6)/3#sqrt(6)/3=1.5**(-1/2)
 LevelSpeeds:tuple[float]=tuple([(Root6Over3**i*57.6650390625)for i in range(36)])#57.6650390625=1.5**10
 SingleplayerModes:frozenset[int]=frozenset({1,2,3,4,6})
 SmallBagFull:tuple[int]=(1,2,3,4)
-VersionID:int=6
+VersionID:int=5
 WallKickData:tuple[tuple[int]]=((0,1),(-1,0),(1,0),(-1,1),(1,1),(0,-1),(1,-1),(1,-1),(0,0))
 del PiOverRoot35
 del Root35
