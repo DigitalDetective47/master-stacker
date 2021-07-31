@@ -71,7 +71,7 @@ def updateAssets()->None:
         font=asset(pathlib.PurePath("font"))
     ghosts=asset(pathlib.PurePath("ghost"))
     pieces=asset(pathlib.PurePath("piece"))
-    playerBoardMasks=((pygame.Rect(48*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(13*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(48*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(48*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(13*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(48*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(13*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(13*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)))
+    playerBoardMasks=((pygame.Rect(48*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(8*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(48*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(48*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(8*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(48*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(8*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(8*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)))
     win=pygame.display.set_mode(resolution,(pygame.FULLSCREEN if settings["fullscreen"]else 0))
 try:
     with open("settings.json","x")as x:
@@ -160,7 +160,7 @@ leaderboardScrollPosition:int=0
 vsPlayerCount:int=2
 nameEntryPos:int=0
 handlePlayer:int=0
-playerBoardMasks:tuple[tuple[pygame.Rect]]=((pygame.Rect(48*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(13*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(48*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(48*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(13*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(48*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(13*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(13*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)))
+playerBoardMasks:tuple[tuple[pygame.Rect]]=((pygame.Rect(48*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(8*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,43*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(48*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(48*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(8*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(48*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(176*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)),(pygame.Rect(8*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,3*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(8*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(112*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor),pygame.Rect(216*scaleFactor,95*scaleFactor,96*scaleFactor,82*scaleFactor)))
 garbage:list[int]=[]
 remainingAttack:int=0
 framesElapsed:int=0
@@ -172,6 +172,7 @@ rotLMem=False
 rotRMem=False
 holdMem=False
 pauseMem=False
+dasTimer=0
 try:
     while True:
         if pygame.QUIT in[event.type for event in pygame.event.get()]:
@@ -594,7 +595,7 @@ try:
                                 dasTimer=settings["dasInit"]if dasTimer==0 else settings["dasSpeed"]
                         else:
                             dasTimer-=1
-                    if not(leftPressed or rightPressed):
+                    if leftPressed==rightPressed:
                         dasTimer=0
                     if upPressed:
                         if not upMem:
@@ -778,6 +779,7 @@ try:
                 elif upPressed and rotLPressed:
                     toppedOut=True
                     upMem=True
+                    rotLMem=True
                 if pausePressed:
                     if not pauseMem:
                         gamePaused=not gamePaused
@@ -923,25 +925,28 @@ try:
                     menuPage=0
                     time=0
                     win.fill(0)
-                if leftPressed:
-                    if not leftMem:
-                        if menuPage==0 and settings["minLvl"]>0:
+                if leftPressed and not rightPressed:
+                    leftMem=True
+                    dasTimer=min(dasTimer,0)
+                    if dasTimer>-2:
+                        if menuPage==0 and settings["minLvl"]!=0:
                             settings["minLvl"]-=1
-                        elif menuPage==1 and settings["maxLvl"]>settings["minLvl"]:
+                        elif menuPage==1 and settings["maxLvl"]!=settings["minLvl"]:
                             settings["maxLvl"]-=1
                         elif menuPage==2 and not settings["ghost"]:
                             settings["ghost"]=True
-                        elif menuPage==3 and settings["dasInit"]>1:
+                        elif menuPage==3 and settings["dasInit"]!=1:
                             settings["dasInit"]-=1
-                        elif menuPage==4 and settings["dasSpeed"]>1:
+                        elif menuPage==4 and settings["dasSpeed"]!=1:
                             settings["dasSpeed"]-=1
-                        elif menuPage==5 and resolution!=(640,360):
-                            resolution=Resolutions[Resolutions.index(resolution)-1]
+                        elif menuPage==5 and settings["resolutionSetting"]!=0:
+                            settings["resolutionSetting"]-=1
+                            resolution=Resolutions[settings["resolutionSetting"]]
                             updateAssets()
                         elif menuPage==6 and not settings["fullscreen"]:
                             settings["fullscreen"]=True
                             updateAssets()
-                        elif menuPage==7 and settings["garbageType"]>0:
+                        elif menuPage==7 and settings["garbageType"]!=0:
                             settings["garbageType"]-=1
                         elif menuPage==8 and not settings["garbageBlocking"]:
                             settings["garbageBlocking"]=True
@@ -949,14 +954,18 @@ try:
                             settings["samePieces"]=True
                         elif menuPage==10 and not settings["newBags"]:
                             settings["newBags"]=True
-                        leftMem=True
+                        dasTimer=-(settings["dasInit"]if dasTimer==0 else settings["dasSpeed"])
+                    else:
+                        dasTimer+=1
                 else:
                     leftMem=False
-                if rightPressed:
-                    if not rightMem:
-                        if menuPage==0 and settings["minLvl"]<settings["maxLvl"]:
+                if rightPressed and not leftPressed:
+                    rightMem=True
+                    dasTimer=max(dasTimer,0)
+                    if dasTimer<2:
+                        if menuPage==0 and settings["minLvl"]!=settings["maxLvl"]:
                             settings["minLvl"]+=1
-                        elif menuPage==1 and settings["maxLvl"]<35:
+                        elif menuPage==1 and settings["maxLvl"]!=35:
                             settings["maxLvl"]+=1
                         elif menuPage==2 and settings["ghost"]:
                             settings["ghost"]=False
@@ -964,14 +973,14 @@ try:
                             settings["dasInit"]+=1
                         elif menuPage==4:
                             settings["dasSpeed"]+=1
-                        elif menuPage==5 and resolution!=(3840,2160):
-                            resolution=Resolutions[Resolutions.index(resolution)+1]
+                        elif menuPage==5 and settings["resolutionSetting"]!=4:
+                            settings["resolutionSetting"]+=1
+                            resolution=Resolutions[settings["resolutionSetting"]]
                             updateAssets()
-                            playerBoardMasks=[[pygame.Rect(96*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(16*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(224*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(432*scaleFactor//2,86*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)],[pygame.Rect(96*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,6*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(96*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2),pygame.Rect(352*scaleFactor//2,190*scaleFactor//2,192*scaleFactor//2,164*scaleFactor//2)]]
                         elif menuPage==6 and settings["fullscreen"]:
                             settings["fullscreen"]=False
                             updateAssets()
-                        elif menuPage==7 and settings["garbageType"]<2:
+                        elif menuPage==7 and settings["garbageType"]!=2:
                             settings["garbageType"]+=1
                         elif menuPage==8 and settings["garbageBlocking"]:
                             settings["garbageBlocking"]=False
@@ -979,14 +988,18 @@ try:
                             settings["samePieces"]=False
                         elif menuPage==10 and settings["newBags"]:
                             settings["newBags"]=False
-                        rightMem=True
+                        dasTimer=settings["dasInit"]if dasTimer==0 else settings["dasSpeed"]
+                    else:
+                        dasTimer-=1
                 else:
                     rightMem=False
+                if leftPressed==rightPressed:
+                    dasTimer=0
                 if downPressed:
                     if not downMem:
                         if menuPage==7 and settings["garbageType"]==2:
                             menuPage=9
-                        elif menuPage<11:
+                        elif menuPage!=11:
                             menuPage+=1
                         downMem=True
                 else:
@@ -995,7 +1008,7 @@ try:
                     if not upMem:
                         if menuPage==9 and settings["garbageType"]==2:
                             menuPage=7
-                        elif menuPage>0:
+                        elif menuPage!=0:
                             menuPage-=1
                         upMem=True
                 else:
@@ -1019,14 +1032,14 @@ try:
                         pauseMem=True
                 else:
                     pauseMem=False
-                drawText("(1P) Starting Level:"+("<"if menuPage==0 and settings["minLvl"]>0 else" ")+"{:02}".format(settings["minLvl"])+(">"if menuPage==0 and settings["minLvl"]<settings["maxLvl"]else""),(0,0),{"<":1,">":2})
-                drawText("(1P) Maximum Level:"+("<"if menuPage==1 and settings["maxLvl"]>settings["minLvl"]else" ")+"{:02}".format(settings["maxLvl"])+(">"if menuPage==1 and settings["maxLvl"]<35 else""),(0,8),{"<":1,">":2})
+                drawText("(1P) Starting Level:"+("<"if menuPage==0 and settings["minLvl"]!=0 else" ")+"{:02}".format(settings["minLvl"])+(">"if menuPage==0 and settings["minLvl"]!=settings["maxLvl"]else""),(0,0),{"<":1,">":2})
+                drawText("(1P) Maximum Level:"+("<"if menuPage==1 and settings["maxLvl"]!=settings["minLvl"]else" ")+"{:02}".format(settings["maxLvl"])+(">"if menuPage==1 and settings["maxLvl"]!=35 else""),(0,8),{"<":1,">":2})
                 drawText("Ghost:"+("<"if menuPage==2 and not settings["ghost"]else" ")+("On"if settings["ghost"]else"Off")+(">"if menuPage==2 and settings["ghost"]else""),(0,16),{"<":1,">":2})
-                drawText("Initial DAS Delay:"+("<"if menuPage==3 and settings["dasInit"]>1 else" ")+str(settings["dasInit"])+(">"if menuPage==3 else""),(0,24),{"<":1,">":2})
-                drawText("DAS Speed:"+("<"if menuPage==4 and settings["dasSpeed"]>1 else" ")+str(settings["dasSpeed"])+(">"if menuPage==4 else""),(0,32),{"<":1,">":2})
-                drawText("Resolution:"+("<"if menuPage==5 and resolution!=(640,360)else" ")+{(640,360):"640\xD7360 (SD)",(1280,720):"1280\xD7720 (HD)",(1920,1080):"1920\xD71080 (FHD)",(2560,1440):"2560\xD71440 (QHD)",(3840,2160):"3840\xD72160 (4K/UHD)"}[resolution]+(">"if menuPage==5 and resolution!=(3840,2160)else""),(0,40),{"<":1,">":2})
+                drawText("Initial DAS Delay:"+("<"if menuPage==3 and settings["dasInit"]!=1 else" ")+str(settings["dasInit"])+(">"if menuPage==3 else""),(0,24),{"<":1,">":2})
+                drawText("DAS Speed:"+("<"if menuPage==4 and settings["dasSpeed"]!=1 else" ")+str(settings["dasSpeed"])+(">"if menuPage==4 else""),(0,32),{"<":1,">":2})
+                drawText("Resolution:"+("<"if menuPage==5 and settings["resolutionSetting"]!=(640,360)else" ")+["640\xD7360 (SD)","1280\xD7720 (HD)","1920\xD71080 (FHD)","2560\xD71440 (QHD)","3840\xD72160 (4K/UHD)"][settings["resolutionSetting"]]+(">"if menuPage==5 and settings["resolutionSetting"]!=4 else""),(0,40),{"<":1,">":2})
                 drawText("Fullscreen:"+("<"if menuPage==6 and not settings["fullscreen"]else" ")+("On"if settings["fullscreen"]else"Off")+(">"if menuPage==6 and settings["fullscreen"]else""),(0,48),{"<":1,">":2})
-                drawText("(VS) Garbage Attacks:"+("<"if menuPage==7 and settings["garbageType"]>0 else" ")+["All","Random","None"][settings["garbageType"]]+(">"if menuPage==7 and settings["garbageType"]<2 else""),(0,56),{"<":1,">":2})
+                drawText("(VS) Garbage Attacks:"+("<"if menuPage==7 and settings["garbageType"]>0 else" ")+["All","Random","None"][settings["garbageType"]]+(">"if menuPage==7 and settings["garbageType"]!=2 else""),(0,56),{"<":1,">":2})
                 if settings["garbageType"]!=2:
                     drawText("(VS) Garbage Countering:"+("<"if menuPage==8 and not settings["garbageBlocking"]else" ")+("On"if settings["garbageBlocking"]else"Off")+(">"if menuPage==8 and settings["garbageBlocking"]else""),(0,64),{"<":1,">":2})
                 drawText("(VS) All Players Get Same Pieces:"+("<"if menuPage==9 and not settings["samePieces"]else" ")+("On"if settings["samePieces"]else"Off")+(">"if menuPage==9 and settings["samePieces"]else""),(0,72),{"<":1,">":2})
@@ -1047,36 +1060,32 @@ try:
                         rightMem=True
                 else:
                     rightMem=False
-                if upPressed:
-                    if dasTime<2:
-                        name=list(name)                      
+                if upPressed and not downPressed:
+                    dasTimer=min(dasTimer,0)
+                    if dasTimer>-2:
+                        name=list(name)
                         if name[nameEntryPos]in{' ','\xA1','\xAE'}:
                             name[nameEntryPos]={' ':'\xFF','\xA1':'~','\xAE':'\xAC'}[name[nameEntryPos]]
                         else:
                             name[nameEntryPos]=chr(ord(name[nameEntryPos])-1)
                         name="".join(name)
-                        if dasTime==0:
-                            dasTime=settings["dasInit"]
-                        else:
-                            dasTime=settings["dasSpeed"]
+                        dasTime=-(settings["dasInit"]if dasTimer==0 else settings["dasSpeed"])
                     else:
-                        dasTime-=1
-                if downPressed:
-                    if dasTime<2:
+                        dasTimer+=1
+                if downPressed and not upPressed:
+                    dasTimer=max(dasTimer,0)
+                    if dasTimer<2:
                         name=list(name)
                         if name[nameEntryPos]in{'\xFF','~','\xAC'}:
                             name[nameEntryPos]={'\xFF':' ','~':'\xA1','\xAC':'\xAE'}[name[nameEntryPos]]
                         else:
                             name[nameEntryPos]=chr(ord(name[nameEntryPos])+1)
                         name="".join(name)
-                        if dasTime==0:
-                            dasTime=settings["dasInit"]
-                        else:
-                            dasTime=settings["dasSpeed"]
+                        dasTimer=settings["dasInit"]if dasTimer==0 else settings["dasSpeed"]
                     else:
-                        dasTime-=1
-                if not(upPressed or downPressed):
-                    dasTime=0
+                        dasTimer-=1
+                if upPressed==downPressed:
+                    dasTimer=0
                 if rotLPressed:
                     if not rotLMem:
                         mode=0
